@@ -2,19 +2,35 @@ package main
 
 import (
     "fmt"
-    "github.com/diegovanne/go23/exercise2/services/sorting"
+	"os"
+	"strconv"
+    "github.com/diegovanne/go23/exercise2/services"
 )
 
 func main() {
-    intArr := []int{5, 2, 8, 1, 9, 3}
-    sorting.SortInts(intArr)
-    fmt.Println("Sorted integer array:", intArr)
+	if len(os.Args) < 2 {
+		fmt.Println("Usage: go run exercise2.go <elements>")
+		fmt.Println("Example: go run exercise2.go 5 2 8 1 9 3")
+		os.Exit(1)
+	}
 
-    floatArr := []float64{3.14, 1.1, 0.5, 2.71, 1.618}
-    sorting.SortFloats(floatArr)
-    fmt.Println("Sorted float64 array:", floatArr)
+	input := os.Args[1:]
+	fmt.Println("Input:", input)
 
-    stringArr := []string{"apple", "banana", "orange", "grape", "pear"}
-    sorting.SortStrings(stringArr)
-    fmt.Println("Sorted string array:", stringArr)
+	ints, floats, strings := inputparser.ParseInput(input)
+
+	if len(ints) > 0 {
+		sorting.SortInts(ints)
+		fmt.Println("Sorted integer array:", ints)
+	}
+
+	if len(floats) > 0 {
+		sorting.SortFloats(floats)
+		fmt.Println("Sorted float64 array:", floats)
+	}
+
+	if len(strings) > 0 {
+		sorting.SortStrings(strings)
+		fmt.Println("Sorted string array:", strings)
+	}
 }
