@@ -56,7 +56,7 @@ To get started with the Google Form Clone Project, follow these steps:
 
 ## Contribution
 
-If you find any issues or have suggestions for improvement, we welcome your contributions. Please follow the guidelines outlined in the CONTRIBUTING.md file.
+If you find any issues or have suggestions for improvement, we welcome your contributions. Please follow the guidelines outlined in the [CONTRIBUTING.md](CONTRIBUTING.md) file.
 Let's build an amazing Google Form Clone together! Happy coding! 🚀
 
 ## License
