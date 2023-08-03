@@ -65,6 +65,6 @@ The Google Form Clone project is released under the [MIT License](https://openso
 
 ## Credits
 
-This project was developed with love and dedication by [Lê Đình Văn](https://github.com/diegovanne) and [Lê Văn Bảo](https://github.com/yuri7030).
+This project was developed with love and dedication by [Lê Đình Văn](https://github.com/diegovanne), [Lê Văn Bảo](https://github.com/yuri7030), [Bùi Vĩ Quốc](https://github.com/bvquoc/).
 
 Thank you for choosing the Google Form Clone project. We hope you enjoy using it and find it useful for your survey needs. Happy surveying! 📝📊
