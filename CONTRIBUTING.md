@@ -12,7 +12,7 @@ Before contributing, please read and adhere to our [Code of Conduct](CODE_OF_CON
 
 1. Fork the repository on GitHub to create your copy.
 2. Clone the forked repository to your local machine using `git clone`.
-3. Set up the development environment following the instructions in the README.md file.
+3. Set up the development environment following the instructions in the [Readme](README.md) file.
 
 ## Making Changes
 
