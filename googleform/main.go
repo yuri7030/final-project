@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/diegovanne/go23/exercise1/cmd"
+	"github.com/diegovanne/go23/googleform/cmd"
 )
 
 func main() {
