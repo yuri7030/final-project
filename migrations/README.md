@@ -6,6 +6,28 @@ The Google Form Clone Project is an interactive web application that replicates 
 
 The project uses a SQL Server database named `GoogleFormDb` to store user and survey data.
 
+## Features
+
+- **User Management**: Users can sign up, providing their first name, last name, and creation date. This information is stored in the `Users` table.
+
+- **Survey Creation**: Authenticated users can create surveys by providing a title, which is stored along with the creation date and the user ID in the `Surveys` table.
+
+- **Question Creation**: Surveys can have multiple questions, each with a question text and an answer type. These questions are stored in the `Questions` table and linked to the corresponding survey.
+
+- **Response Collection**: Users can respond to surveys by providing answers. Responses are stored in the `Answers` table, linked to the corresponding question. The response can include answer text, single choice selection, or multiple choice selections.
+
+## Getting Started
+
+To run the Google Form Clone project locally:
+
+1. Set up a SQL Server instance and download this [script](google-form-migration.sql)
+2. Execute the provided SQL script in your SQL Server management tool to create the necessary tables and relationships.
+3. Clone this repository to your local machine.
+4. Configure the database connection settings in the project to point to your SQL Server instance.
+5. Run the application and start exploring the features.
+
+Feel free to customize and enhance the project to meet your specific requirements or to further extend its functionality.
+
 ### Users Table
 
 The `Users` table holds information about users who interact with the application. It stores the following details:
@@ -54,4 +76,8 @@ The database entities are connected through the following relationships:
 
 This project's database structure facilitates the creation of surveys, design of various types of questions, and collection of responses, enabling a simplified version of Google Forms functionality.
 
-Please note that this README provides an overview of the database design and relationships. For detailed implementation and usage instructions, refer to the project documentation or source code.
+## Contributions
+
+Contributions to the Google Form Clone project are welcome! Whether it's bug fixes, feature enhancements, or documentation improvements, your contributions can help make this project better.
+
+We hope you enjoy working on and using the Google Form Clone project!
