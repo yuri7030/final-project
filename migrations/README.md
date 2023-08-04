@@ -74,6 +74,10 @@ The database entities are connected through the following relationships:
 - Survey questions (in the `Questions` table) belong to a specific survey (via `SurveyId`).
 - Answers (in the `Answers` table) are linked to the question they respond to (via `QuestionId`) and the respondent (via `RespondentId`).
 
+Take a look at the diagram below to have an overview of the relationship.
+
+![Golang Logo](google_form_diagram.png)
+
 This project's database structure facilitates the creation of surveys, design of various types of questions, and collection of responses, enabling a simplified version of Google Forms functionality.
 
 ## Contributions
