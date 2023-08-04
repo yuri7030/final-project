@@ -5,8 +5,8 @@ GO
 
 CREATE TABLE Users (
     UserId INT IDENTITY(1,1) PRIMARY KEY,
-    FirstName NVARCHAR(50) NOT NULL,
-    LastName NVARCHAR(50) NOT NULL,
+    FirstName NVARCHAR(50) NULL,
+    LastName NVARCHAR(50) NULL,
     CreatedDate DATETIME DEFAULT GETDATE()
 );
 
