@@ -32,11 +32,7 @@ Within each survey, there are questionnaires that need to be managed. This featu
 
 Survey data wouldn't be complete without answers from respondents. With this feature, users can submit their answers to a specific survey effortlessly.
 
-### 7. Aggregate Answers into Percentages
-
-Data analysis is a vital aspect of surveys. This feature aggregates all answers of every questionnaire in a specific survey and presents the results as percentages.
-
-### 8. Aggregate Total Number of Users who Answer a Specific Survey
+### 7. Aggregate Total Number of Users who Answer a Specific Survey
 
 Understanding the number of users who have responded to a survey is crucial for analysis. This feature aggregates the total number of users who have answered a specific survey.
 
