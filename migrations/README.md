@@ -4,7 +4,7 @@
 
 The Google Form Clone Project is an interactive web application that replicates the functionality of Google Forms, allowing users to create surveys, design questions, and collect responses. This README provides an overview of the project's database structure, explaining the entities involved and the relationships among them.
 
-The project uses a SQL Server database named `GoogleFormDb` to store user and survey data.
+The project uses a SQL Server database named `googleFormDb` to store user and survey data.
 
 ## Features
 

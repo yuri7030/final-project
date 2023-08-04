@@ -1,0 +1,5 @@
+environment: PROD
+db_user: user
+db_password: 12345678
+db_name: googleFormDb
+jwt_secret: QhNYaTIWvlvT0lSZxCEOSbCyd9pJMFz2Wtypgriv59U

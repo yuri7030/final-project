@@ -1,45 +1,46 @@
-CREATE DATABASE GoogleFormDb
-USE GoogleFormDb
+CREATE DATABASE googleFormDb
+USE googleFormDb
 
 GO
 
-CREATE TABLE Users (
-    UserId INT IDENTITY(1,1) PRIMARY KEY,
-    FirstName NVARCHAR(50) NULL,
-    LastName NVARCHAR(50) NULL,
-    CreatedDate DATETIME DEFAULT GETDATE()
+CREATE TABLE users (
+    userId INT IDENTITY(1,1) PRIMARY KEY,
+    firstName NVARCHAR(50) NULL,
+    lastName NVARCHAR(50) NULL,
+    createdDate DATETIME DEFAULT GETDATE()
 );
 
 GO
 
-CREATE TABLE Surveys (
-    SurveyId INT IDENTITY(1,1) PRIMARY KEY,
-    Title NVARCHAR(100) NOT NULL,
-    CreatedDate DATETIME DEFAULT GETDATE(),
-    CreatedById INT NOT NULL,
-    FOREIGN KEY (CreatedById) REFERENCES Users(UserId)
+CREATE TABLE surveys (
+    surveyId INT IDENTITY(1,1) PRIMARY KEY,
+    title NVARCHAR(100) NOT NULL,
+    createdDate DATETIME DEFAULT GETDATE(),
+    createdById INT NOT NULL,
+    FOREIGN KEY (createdById) REFERENCES users(userId)
 );
 
 GO
 
-CREATE TABLE Questions (
-    QuestionId INT IDENTITY(1,1) PRIMARY KEY,
-    SurveyId INT NOT NULL,
-    QuestionText NVARCHAR(500) NOT NULL,
-	AnswerType INT NOT NULL,
-    CONSTRAINT FK_Questions_Surveys FOREIGN KEY (SurveyId) REFERENCES Surveys(SurveyId)
+CREATE TABLE questions (
+    questionId INT IDENTITY(1,1) PRIMARY KEY,
+    surveyId INT NOT NULL,
+    questionText NVARCHAR(500) NOT NULL,
+	answerType INT NOT NULL,
+    CONSTRAINT fk_questions_surveys FOREIGN KEY (surveyId) REFERENCES surveys(surveyId)
 );
 
 GO
 
-CREATE TABLE Answers (
-    AnswerId INT IDENTITY(1,1) PRIMARY KEY,
-    QuestionId INT NOT NULL,
-    RespondentId INT NULL,
-    AnswerText NVARCHAR(MAX) NULL,
-	SingleChoiceAnswer INT NULL,
-	MultipleChoiceAnswer INT NULL,
-    CONSTRAINT FK_Answers_Questions FOREIGN KEY (QuestionId) REFERENCES Questions(QuestionId)
+CREATE TABLE answers (
+    answerId INT IDENTITY(1,1) PRIMARY KEY,
+    questionId INT NOT NULL,
+    guid VARCHAR(255) NULL,
+    answerText NVARCHAR(MAX) NULL,
+	numberChoiceAnswer DOUBLE NULL,
+	singleChoiceAnswer INT NULL,
+	multipleChoiceAnswer VARCHAR(50) NULL,
+    CONSTRAINT fk_answers_questions FOREIGN KEY (questionId) REFERENCES questions(questionId)
 );
 
 GO
