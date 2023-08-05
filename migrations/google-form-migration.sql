@@ -5,8 +5,10 @@ GO
 
 CREATE TABLE users (
     userId INT IDENTITY(1,1) PRIMARY KEY,
-    firstName NVARCHAR(50) NULL,
-    lastName NVARCHAR(50) NULL,
+    firstName NVARCHAR(50) NOT NULL,
+    lastName NVARCHAR(50) NOT NULL,
+	email NVARCHAR(100) NOT NULL,
+	[password] NVARCHAR(MAX) NOT NULL,
     createdDate DATETIME DEFAULT GETDATE()
 );
 
@@ -35,7 +37,7 @@ GO
 CREATE TABLE answers (
     answerId INT IDENTITY(1,1) PRIMARY KEY,
     questionId INT NOT NULL,
-    guid VARCHAR(255) NULL,
+    [guid] VARCHAR(255) NULL,
     answerText NVARCHAR(MAX) NULL,
 	numberChoiceAnswer DOUBLE NULL,
 	singleChoiceAnswer INT NULL,
