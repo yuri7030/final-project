@@ -16,7 +16,7 @@ type AppConfig struct {
 
 // LoadConfig loads the application configuration from a config file.
 func LoadConfig() (*AppConfig, error) {
-	viper.SetConfigName("config")
+	viper.SetConfigName("development")
 	viper.SetConfigType("yaml")
 	viper.AddConfigPath("configs")
 	err := viper.ReadInConfig()
