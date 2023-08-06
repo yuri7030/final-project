@@ -7,9 +7,12 @@ import (
 )
 
 func InitializeRoutes(router *gin.Engine) {
+	router.Use(gin.Recovery())
+
 	authHandler := handlers.NewAuthHandler()
 	authGroup := router.Group("/auth")
 	authGroup.POST("/login", authHandler.Login)
+	authGroup.POST("/register", authHandler.Register)
 
 	surveyHandler := handlers.NewSurveyHandler()
 	systemGroup := router.Group("/")

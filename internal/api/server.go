@@ -3,6 +3,7 @@ package api
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/yuri7030/final-project/internal/api/config"
+	"github.com/yuri7030/final-project/internal/api/database"
 	"github.com/yuri7030/final-project/internal/api/routes"
 )
 
@@ -20,7 +21,7 @@ func NewServer() *Server {
 		panic(err)
 	}
 
-	ConnectDatabase()
+	database.ConnectDatabase()
 
 	routes.InitializeRoutes(server.router)
 
