@@ -47,7 +47,7 @@ func (h *AuthHandler) Register(c *gin.Context) {
 	}
 
 	var oldUser entities.User
-	result := database.DB.Debug().Where(&entities.User{Email: register.Email}).First(oldUser)
+	result := database.DB.Where(&entities.User{Email: register.Email}).First(&oldUser)
 	if result.RowsAffected > 0 {
 		common.ResponseError(c, http.StatusBadRequest, "Email already exists", nil)
 		return
