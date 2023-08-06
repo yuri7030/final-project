@@ -1,8 +1,10 @@
 package api
 
 import (
+	"log"
+
 	"github.com/gin-gonic/gin"
-	"github.com/yuri7030/final-project/internal/api/config"
+	"github.com/joho/godotenv"
 	"github.com/yuri7030/final-project/internal/api/database"
 	"github.com/yuri7030/final-project/internal/api/routes"
 )
@@ -16,8 +18,9 @@ func NewServer() *Server {
 		router: gin.Default(),
 	}
 
-	_, err := config.LoadConfig()
+	err := godotenv.Load(".env")
 	if err != nil {
+		log.Fatalf("Some error occured. Err: %s", err)
 		panic(err)
 	}
 

@@ -1,6 +1,8 @@
 package config
 
 import (
+	"os"
+
 	"github.com/spf13/viper"
 	"github.com/yuri7030/final-project/internal/constants"
 )
@@ -65,4 +67,8 @@ func GetJwtSecret() string {
 
 func GetDbPort() string {
 	return viper.GetString("db_port")
+}
+
+func GetValue(key string) string {
+	return os.Getenv(key)
 }

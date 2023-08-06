@@ -12,12 +12,13 @@ import (
 var DB *gorm.DB
 
 func ConnectDatabase() {
-	var dbName = config.GetDbName()
-	var dbUser = config.GetDbUser()
-	var dBPassword = config.GetDbPassword()
-	var dbPort = config.GetDbPort()
+	var dbName = config.GetValue("DB_NAME")
+	var dbHost = config.GetValue("DB_HOST")
+	var dbUser = config.GetValue("DB_USER")
+	var dBPassword = config.GetValue("DB_PASSWORD")
+	var dbPort = config.GetValue("DB_PORT")
 
-	dbPath := fmt.Sprintf("%s:%s@tcp(127.0.0.1:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", dbUser, dBPassword, dbName, dbPort)
+	dbPath := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", dbUser, dBPassword, dbHost, dbPort, dbName)
 	fmt.Println("dbPath", dbPath)
 
 	database, err := gorm.Open(mysql.Open(dbPath), &gorm.Config{})
