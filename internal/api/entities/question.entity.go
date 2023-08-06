@@ -4,7 +4,7 @@ import "gorm.io/gorm"
 
 type Question struct {
 	gorm.Model
-	SurveyId     int
+	SurveyID     int
 	QuestionText string `gorm:"type:text"`
 	AnswerType   int
 }

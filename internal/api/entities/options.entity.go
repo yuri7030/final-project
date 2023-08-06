@@ -4,7 +4,7 @@ import "gorm.io/gorm"
 
 type Option struct {
 	gorm.Model
-	QuestionId int
+	QuestionID int
 	OptionText string
 }
 
