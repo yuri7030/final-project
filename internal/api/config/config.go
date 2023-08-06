@@ -11,6 +11,7 @@ type AppConfig struct {
 	DBUser      string
 	DBPassword  string
 	DBName      string
+	DBPort      string
 	JwtSecret   string
 }
 
@@ -35,6 +36,7 @@ func LoadConfig() (*AppConfig, error) {
 		DBUser:      viper.GetString("db_user"),
 		DBPassword:  viper.GetString("db_password"),
 		DBName:      viper.GetString("db_name"),
+		DBPort:      viper.GetString("db_port"),
 		JwtSecret:   viper.GetString("jwt_secret"),
 	}
 
@@ -59,4 +61,8 @@ func GetDbName() string {
 
 func GetJwtSecret() string {
 	return viper.GetString("jwt_secret")
+}
+
+func GetDbPort() string {
+	return viper.GetString("db_port")
 }

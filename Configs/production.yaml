@@ -2,4 +2,5 @@ environment: PROD
 db_user: user
 db_password: 12345678
 db_name: googleFormDb
+db_port: 3306
 jwt_secret: QhNYaTIWvlvT0lSZxCEOSbCyd9pJMFz2Wtypgriv59U
