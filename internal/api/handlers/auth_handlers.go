@@ -9,16 +9,11 @@ import (
 	"github.com/yuri7030/final-project/internal/api/common"
 	"github.com/yuri7030/final-project/internal/api/database"
 	"github.com/yuri7030/final-project/internal/api/entities"
-	"github.com/yuri7030/final-project/internal/constants"
+	"github.com/yuri7030/final-project/internal/api/inputs"
+	"github.com/yuri7030/final-project/internal/api/config"
 )
 
 type AuthHandler struct {
-}
-
-type registerInput struct {
-	Email    string `json:"email" binding:"required,email"`
-	Password string `json:"password" binding:"required"`
-	Name     string `json:"name" binding:"required"`
 }
 
 func NewAuthHandler() *AuthHandler {
@@ -26,8 +21,9 @@ func NewAuthHandler() *AuthHandler {
 }
 
 func (h *AuthHandler) Login(c *gin.Context) {
+	// var login inputs.LoginInput
 	token := jwt.New(jwt.SigningMethodHS256)
-	tokenString, err := token.SignedString([]byte(constants.JwtSecretKey))
+	tokenString, err := token.SignedString([]byte(config.GetValue("JWT_KEY")))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate JWT token"})
 		return
@@ -37,7 +33,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
 }
 
 func (h *AuthHandler) Register(c *gin.Context) {
-	var register registerInput
+	var register inputs.RegisterInput
 
 	if err := c.ShouldBindJSON(&register); err != nil {
 		errorInputs := common.ParseError(err)

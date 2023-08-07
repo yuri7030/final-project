@@ -1,28 +1,53 @@
 package handlers
 
 import (
-	"github.com/gin-gonic/gin"
-	"net/http"
-	"github.com/yuri7030/final-project/internal/api/models"
+    "net/http"
+    "github.com/gin-gonic/gin"
+    "github.com/yuri7030/final-project/internal/api/common"
+    "github.com/yuri7030/final-project/internal/api/database"
+    "github.com/yuri7030/final-project/internal/api/entities"
+    "github.com/yuri7030/final-project/internal/api/inputs"
 )
 
 type SurveyHandler struct {
 }
 
-var surveys []models.Survey
-
 func NewSurveyHandler() *SurveyHandler {
-	return &SurveyHandler{}
+    return &SurveyHandler{}
 }
 
 func (h *SurveyHandler) CreateSurvey(c *gin.Context) {
-	var survey models.Survey
-	if err := c.ShouldBindJSON(&survey); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
+    var input inputs.SurveyCreatingInput
+    if err := c.ShouldBindJSON(&input); err != nil {
+        common.ResponseError(c, http.StatusBadRequest, "Invalid inputs", common.ParseError(err))
+        return
+    }
 
-	survey.ID = len(surveys) + 1
-	surveys = append(surveys, survey)
-	c.JSON(http.StatusCreated, survey)
+    user, exists := c.Get("user")
+    if !exists {
+        common.ResponseError(c, http.StatusUnauthorized, "Unauthorized", nil)
+        return
+    }
+
+    currentUser := user.(entities.User)
+
+    survey := entities.Survey{
+        Title:       input.Title,
+        Description: input.Description,
+        CreatedBy: currentUser.ID,
+    }
+
+    if err := database.DB.Create(&survey).Error; err != nil {
+        common.ResponseError(c, http.StatusInternalServerError, "Failed to create survey", nil)
+        return
+    }
+
+    // map the survey to the result
+    result := map[string]interface{} {
+        "id":          survey.ID,
+        "title":       survey.Title,
+        "description": survey.Description,
+    }
+
+    common.ResponseSuccess(c, http.StatusCreated, "Survey created successfully", result)
 }

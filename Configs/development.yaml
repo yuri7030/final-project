@@ -1,6 +1,0 @@
-environment: DEV
-db_user: root
-db_password: root
-db_name: googleFormDb
-db_port: 33060
-jwt_secret: QhNYaTIWvlvT0lSZxCEOSbCyd9pJMFz2Wtypgriv59U
