@@ -4,10 +4,13 @@ import "gorm.io/gorm"
 
 type Answer struct {
 	gorm.Model
-	SurveyID          int
-	GUID              string `gorm:"type:varchar(100)"`
-	SingleOptionID    int
+	QuestionID 		  uint
+	GUID              string `gorm:"type:varchar(50)"`
+	AnswerText        string
+	SingleOptionID    uint
 	MultipleOptionIDs string `gorm:"type:varchar(50)"`
+	
+	Question Question `gorm:"foreignKey:QuestionID"`
 }
 
 func (Answer) TableName() string {

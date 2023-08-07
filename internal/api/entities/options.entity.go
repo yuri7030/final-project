@@ -4,8 +4,9 @@ import "gorm.io/gorm"
 
 type Option struct {
 	gorm.Model
-	QuestionID int
+	QuestionID uint
 	OptionText string
+	Question Question `gorm:"foreignKey:QuestionID"`
 }
 
 func (Option) TableName() string {

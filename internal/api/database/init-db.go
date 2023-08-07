@@ -19,9 +19,10 @@ func ConnectDatabase() {
 	var dbPort = config.GetValue("DB_PORT")
 
 	dbPath := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", dbUser, dBPassword, dbHost, dbPort, dbName)
-	fmt.Println("dbPath", dbPath)
 
-	database, err := gorm.Open(mysql.Open(dbPath), &gorm.Config{})
+	database, err := gorm.Open(mysql.Open(dbPath), &gorm.Config{
+		// LogLevel: 2
+	})
 
 	if err != nil {
 		panic("Failed to connect to database!")
@@ -36,7 +37,7 @@ func ConnectDatabase() {
 	)
 
 	if err != nil {
-		return
+		panic("Failed to migrate database!")
 	}
 
 	DB = database

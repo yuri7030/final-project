@@ -44,7 +44,7 @@ The `Surveys` table represents the surveys created by users. It includes the fol
 - `SurveyId`: A unique identifier for each survey.
 - `Title`: The title of the survey (up to 100 characters).
 - `CreatedDate`: The date and time when the survey was created.
-- `CreatedById`: A reference to the `UserId` of the user who created the survey.
+- `CreatedBy`: A reference to the `UserId` of the user who created the survey.
 
 ### Questions Table
 
@@ -70,7 +70,7 @@ The `Answers` table records responses to the survey questions. It includes:
 
 The database entities are connected through the following relationships:
 
-- Each survey (in the `Surveys` table) is associated with a user who created it (via `CreatedById`).
+- Each survey (in the `Surveys` table) is associated with a user who created it (via `CreatedBy`).
 - Survey questions (in the `Questions` table) belong to a specific survey (via `SurveyId`).
 - Answers (in the `Answers` table) are linked to the question they respond to (via `QuestionId`) and the respondent (via `RespondentId`).
 

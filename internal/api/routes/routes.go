@@ -18,5 +18,5 @@ func InitializeRoutes(router *gin.Engine) {
 	systemGroup := router.Group("/")
 	systemGroup.Use(middlewares.JWTMiddleware())
 
-	systemGroup.POST("surveys", surveyHandler.CreateSurvey)
+	systemGroup.POST("/surveys", surveyHandler.CreateSurvey)
 }

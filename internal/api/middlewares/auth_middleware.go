@@ -4,18 +4,9 @@ import (
 	"net/http"
 	"github.com/gin-gonic/gin"
 	"github.com/dgrijalva/jwt-go"
-	"github.com/yuri7030/final-project/internal/constants"
+	"github.com/yuri7030/final-project/internal/api/config"
 )
 
-func AuthMiddleware(c *gin.Context) {
-	username, password, ok := c.Request.BasicAuth()
-	if !ok || username != constants.BasicAuthUsername || password != constants.BasicAuthPassword {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
-		c.Abort()
-		return
-	}
-	c.Next()
-}
 
 func JWTMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -27,7 +18,7 @@ func JWTMiddleware() gin.HandlerFunc {
 		}
 
 		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-			return []byte(constants.JwtSecretKey), nil
+			return []byte(config.GetValue("JWT_KEY")), nil
 		})
 
 		if err != nil {

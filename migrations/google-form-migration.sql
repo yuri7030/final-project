@@ -15,10 +15,11 @@ GO
 
 CREATE TABLE surveys (
     surveyId INT IDENTITY(1,1) PRIMARY KEY,
-    title NVARCHAR(100) NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    [description] VARCHAR(500) NULL,
     createdDate DATETIME DEFAULT GETDATE(),
-    createdById INT NOT NULL,
-    FOREIGN KEY (createdById) REFERENCES users(userId)
+    createdBy INT NOT NULL,
+    FOREIGN KEY (createdBy) REFERENCES users(userId)
 );
 
 GO
@@ -28,6 +29,7 @@ CREATE TABLE questions (
     surveyId INT NOT NULL,
     questionText NVARCHAR(500) NOT NULL,
 	answerType INT NOT NULL,
+    createdDate DATETIME DEFAULT GETDATE(),
     CONSTRAINT fk_questions_surveys FOREIGN KEY (surveyId) REFERENCES surveys(surveyId)
 );
 
@@ -37,15 +39,17 @@ CREATE TABLE options (
     optionId INT IDENTITY(1,1) PRIMARY KEY,
     questionId INT NOT NULL,
     optionText NVARCHAR(500) NOT NULL,
-    CONSTRAINT fk_option_question FOREIGN KEY (questionId) REFERENCES surveys(questionId)
+    createdDate DATETIME DEFAULT GETDATE(),
+    CONSTRAINT fk_option_question FOREIGN KEY (questionId) REFERENCES questions(questionId)
 );
 
 GO
 
 CREATE TABLE answers (
-    answerId INT IDENTITY(1,1) PRIMARY KEY,
+    Id INT IDENTITY(1,1) PRIMARY KEY,
     questionId INT NOT NULL,
-    guestId VARCHAR(32) NULL,
+    [guid] VARCHAR(50) NOT NULL,
+    answerText NVARCHAR(500) NULL,
 	singleOptionId INT NULL,
 	multipleOptionIds VARCHAR(50) NULL,
     createdDate DATETIME DEFAULT GETDATE(),
