@@ -42,7 +42,6 @@ func (h *SurveyHandler) CreateSurvey(c *gin.Context) {
         return
     }
 
-    // map the survey to the result
     result := map[string]interface{} {
         "id":          survey.ID,
         "title":       survey.Title,

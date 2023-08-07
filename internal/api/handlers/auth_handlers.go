@@ -21,11 +21,28 @@ func NewAuthHandler() *AuthHandler {
 }
 
 func (h *AuthHandler) Login(c *gin.Context) {
-	// var login inputs.LoginInput
+	var login inputs.LoginInput
+
+	if err := c.ShouldBindJSON(&login); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	var user entities.User
+	result := database.DB.Where(&entities.User{Email: login.Email}).First(&user)
+	if result.RowsAffected == 0 {
+		common.ResponseError(c, http.StatusBadRequest, "This user is not found!", nil)
+		return
+	}
+
 	token := jwt.New(jwt.SigningMethodHS256)
+	token.Claims = jwt.MapClaims{
+		"email": login.Email,
+	}
+
 	tokenString, err := token.SignedString([]byte(config.GetValue("JWT_KEY")))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate JWT token"})
+		common.ResponseError(c, http.StatusInternalServerError, "Failed to generate JWT token!", nil)
 		return
 	}
 
