@@ -7,6 +7,7 @@ import (
     "github.com/yuri7030/final-project/internal/api/database"
     "github.com/yuri7030/final-project/internal/api/entities"
     "github.com/yuri7030/final-project/internal/api/inputs"
+    "fmt"
 )
 
 type SurveyHandler struct {
@@ -24,17 +25,20 @@ func (h *SurveyHandler) CreateSurvey(c *gin.Context) {
     }
 
     user, exists := c.Get("user")
+    // currentUser := user.(map[string]interface{})
+    
+
+    fmt.Println("user", user)
     if !exists {
         common.ResponseError(c, http.StatusUnauthorized, "Unauthorized", nil)
         return
     }
 
-    currentUser := user.(entities.User)
-
     survey := entities.Survey{
         Title:       input.Title,
         Description: input.Description,
-        CreatedBy: currentUser.ID,
+        // CreatedBy: currentUser["ID"],
+        CreatedBy: 1,
     }
 
     if err := database.DB.Create(&survey).Error; err != nil {

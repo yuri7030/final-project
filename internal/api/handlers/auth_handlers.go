@@ -11,6 +11,8 @@ import (
 	"github.com/yuri7030/final-project/internal/api/entities"
 	"github.com/yuri7030/final-project/internal/api/inputs"
 	"github.com/yuri7030/final-project/internal/api/config"
+	"strconv"
+	"time"
 )
 
 type AuthHandler struct {
@@ -41,11 +43,17 @@ func (h *AuthHandler) Login(c *gin.Context) {
 	}
 
 	token := jwt.New(jwt.SigningMethodHS256)
+	exp, err := strconv.Atoi(config.GetValue("JWT_EXPIRY_TIME_SECOND"))
+
+	ttl := time.Duration(exp) * time.Second
+	expTime := time.Now().UTC().Add(ttl).Unix()
+
 	token.Claims = jwt.MapClaims{
 		"email": login.Email,
 		"name": user.Name,
 		"role": user.Role,
 		"id": user.ID,
+		"exp": expTime,
 	}
 
 	tokenString, err := token.SignedString([]byte(config.GetValue("JWT_KEY")))
@@ -94,4 +102,23 @@ func (h *AuthHandler) Register(c *gin.Context) {
 
 	common.ResponseSuccess(c, http.StatusCreated, "Register successfuly", true)
 	return
+}
+
+func (h *AuthHandler) Logout(c *gin.Context) {
+	claims := c.MustGet("claims").(jwt.MapClaims)
+	userID := uint(claims["id"].(float64))
+
+	var user entities.User
+	result := database.DB.First(&user, userID)
+	if result.Error != nil {
+		common.ResponseError(c, http.StatusNotFound, "User not found", nil)
+		return
+	}
+
+	if err := database.DB.Save(&user).Error; err != nil {
+		common.ResponseError(c, http.StatusInternalServerError, "Failed to logout", nil)
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Logout successful"})
 }
