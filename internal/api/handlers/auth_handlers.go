@@ -79,6 +79,12 @@ func (h *AuthHandler) Register(c *gin.Context) {
 		common.ResponseError(c, http.StatusInternalServerError, "Something went wrong", nil)
 		return
 	}
+
+	if register.Role != 1 && register.Role != 2 {
+		common.ResponseError(c, http.StatusBadRequest, "Invalid role", nil)
+		return
+	}
+
 	var user entities.User
 	user.Name = register.Name
 	user.Email = register.Email
