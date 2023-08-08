@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"net/http"
 
 	"strconv"
@@ -71,7 +70,6 @@ func (h *AuthHandler) Register(c *gin.Context) {
 
 	if err := c.ShouldBindJSON(&register); err != nil {
 		errorInputs := common.ParseError(err)
-		fmt.Println(errorInputs)
 		common.ResponseError(c, http.StatusBadRequest, "Invalid inputs", errorInputs)
 		return
 	}
