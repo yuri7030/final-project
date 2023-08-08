@@ -34,6 +34,11 @@ func (h *AuthHandler) Login(c *gin.Context) {
 		common.ResponseError(c, http.StatusBadRequest, "This user is not found!", nil)
 		return
 	}
+	
+	if !common.CheckPasswordHash(login.Password, user.Password) {
+		common.ResponseError(c, http.StatusUnauthorized, "Invalid password", nil)
+		return
+	}
 
 	token := jwt.New(jwt.SigningMethodHS256)
 	token.Claims = jwt.MapClaims{
