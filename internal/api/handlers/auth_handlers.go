@@ -4,15 +4,16 @@ import (
 	"fmt"
 	"net/http"
 
+	"strconv"
+	"time"
+
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"github.com/yuri7030/final-project/internal/api/common"
+	"github.com/yuri7030/final-project/internal/api/config"
 	"github.com/yuri7030/final-project/internal/api/database"
 	"github.com/yuri7030/final-project/internal/api/entities"
 	"github.com/yuri7030/final-project/internal/api/inputs"
-	"github.com/yuri7030/final-project/internal/api/config"
-	"strconv"
-	"time"
 )
 
 type AuthHandler struct {
@@ -36,7 +37,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
 		common.ResponseError(c, http.StatusBadRequest, "This user is not found!", nil)
 		return
 	}
-	
+
 	if !common.CheckPasswordHash(login.Password, user.Password) {
 		common.ResponseError(c, http.StatusUnauthorized, "Invalid password", nil)
 		return
@@ -50,10 +51,10 @@ func (h *AuthHandler) Login(c *gin.Context) {
 
 	token.Claims = jwt.MapClaims{
 		"email": login.Email,
-		"name": user.Name,
-		"role": user.Role,
-		"id": user.ID,
-		"exp": expTime,
+		"name":  user.Name,
+		"role":  user.Role,
+		"id":    user.ID,
+		"exp":   expTime,
 	}
 
 	tokenString, err := token.SignedString([]byte(config.GetValue("JWT_KEY")))

@@ -1,56 +1,47 @@
 package handlers
 
 import (
-    "net/http"
-    "github.com/gin-gonic/gin"
-    "github.com/yuri7030/final-project/internal/api/common"
-    "github.com/yuri7030/final-project/internal/api/database"
-    "github.com/yuri7030/final-project/internal/api/entities"
-    "github.com/yuri7030/final-project/internal/api/inputs"
-    "fmt"
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+	"github.com/yuri7030/final-project/internal/api/common"
+	"github.com/yuri7030/final-project/internal/api/database"
+	"github.com/yuri7030/final-project/internal/api/entities"
+	"github.com/yuri7030/final-project/internal/api/inputs"
 )
 
 type SurveyHandler struct {
 }
 
 func NewSurveyHandler() *SurveyHandler {
-    return &SurveyHandler{}
+	return &SurveyHandler{}
 }
 
 func (h *SurveyHandler) CreateSurvey(c *gin.Context) {
-    var input inputs.SurveyCreatingInput
-    if err := c.ShouldBindJSON(&input); err != nil {
-        common.ResponseError(c, http.StatusBadRequest, "Invalid inputs", common.ParseError(err))
-        return
-    }
+	var input inputs.SurveyCreatingInput
+	if err := c.ShouldBindJSON(&input); err != nil {
+		common.ResponseError(c, http.StatusBadRequest, "Invalid inputs", common.ParseError(err))
+		return
+	}
 
-    user, exists := c.Get("user")
-    // currentUser := user.(map[string]interface{})
-    
+	user := common.GetUserAuth(c)
 
-    fmt.Println("user", user)
-    if !exists {
-        common.ResponseError(c, http.StatusUnauthorized, "Unauthorized", nil)
-        return
-    }
+	survey := entities.Survey{
+		Title:       input.Title,
+		Description: input.Description,
+		CreatedBy:   user.ID,
+	}
 
-    survey := entities.Survey{
-        Title:       input.Title,
-        Description: input.Description,
-        // CreatedBy: currentUser["ID"],
-        CreatedBy: 1,
-    }
+	if err := database.DB.Create(&survey).Error; err != nil {
+		common.ResponseError(c, http.StatusInternalServerError, "Failed to create survey", nil)
+		return
+	}
 
-    if err := database.DB.Create(&survey).Error; err != nil {
-        common.ResponseError(c, http.StatusInternalServerError, "Failed to create survey", nil)
-        return
-    }
+	result := map[string]interface{}{
+		"id":          survey.ID,
+		"title":       survey.Title,
+		"description": survey.Description,
+	}
 
-    result := map[string]interface{} {
-        "id":          survey.ID,
-        "title":       survey.Title,
-        "description": survey.Description,
-    }
-
-    common.ResponseSuccess(c, http.StatusCreated, "Survey created successfully", result)
+	common.ResponseSuccess(c, http.StatusCreated, "Survey created successfully", result)
 }
