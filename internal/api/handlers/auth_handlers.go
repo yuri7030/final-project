@@ -43,6 +43,9 @@ func (h *AuthHandler) Login(c *gin.Context) {
 	token := jwt.New(jwt.SigningMethodHS256)
 	token.Claims = jwt.MapClaims{
 		"email": login.Email,
+		"name": user.Name,
+		"role": user.Role,
+		"id": user.ID,
 	}
 
 	tokenString, err := token.SignedString([]byte(config.GetValue("JWT_KEY")))
@@ -79,6 +82,7 @@ func (h *AuthHandler) Register(c *gin.Context) {
 	var user entities.User
 	user.Name = register.Name
 	user.Email = register.Email
+	user.Role = register.Role
 	user.Password = hashPass
 	database.DB.Create(&user)
 
