@@ -51,7 +51,6 @@ func JWTMiddleware() gin.HandlerFunc {
 
 func BlacklistMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		// Get the user's JWT token from the "Authorization" header
 		authorizationHeader := c.GetHeader("Authorization")
 		if authorizationHeader == "" {
 			common.ResponseError(c, http.StatusUnauthorized, "Missing Authorization header", nil)
@@ -68,7 +67,6 @@ func BlacklistMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		// Continue processing the request if the token is valid and not blacklisted
 		c.Next()
 	}
 }

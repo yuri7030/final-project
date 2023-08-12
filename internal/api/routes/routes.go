@@ -13,7 +13,8 @@ func InitializeRoutes(router *gin.Engine) {
 	authGroup := router.Group("/auth")
 	authGroup.POST("/login", authHandler.Login)
 	authGroup.POST("/register", authHandler.Register)
-	authGroup.POST("/logout", authHandler.Logout)
+	authGroup.POST("/logout", middlewares.JWTMiddleware(), middlewares.BlacklistMiddleware(), authHandler.Logout)
+	authGroup.POST("/change-password", middlewares.JWTMiddleware(), middlewares.BlacklistMiddleware(), authHandler.ChangePassword)
 
 	surveyHandler := handlers.NewSurveyHandler()
 	surveyGroup := router.Group("/survey")
