@@ -14,6 +14,7 @@ func InitializeRoutes(router *gin.Engine) {
 	authGroup.POST("/login", authHandler.Login)
 	authGroup.POST("/register", authHandler.Register)
 	authGroup.POST("/logout", authHandler.Logout)
+	authGroup.POST("/change-password", authHandler.ChangePassword)
 
 	surveyHandler := handlers.NewSurveyHandler()
 	surveyGroup := router.Group("/survey")

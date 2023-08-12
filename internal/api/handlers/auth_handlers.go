@@ -119,3 +119,35 @@ func (h *AuthHandler) Logout(c *gin.Context) {
 
 	common.ResponseSuccess(c, http.StatusOK, "Logged out successfully", nil)
 }
+
+func (h *AuthHandler) ChangePassword(c *gin.Context) {
+	var changePasswordInput inputs.ChangePasswordInput
+
+	if err := c.ShouldBindJSON(&changePasswordInput); err != nil {
+		common.ResponseError(c, http.StatusBadRequest, "Invalid inputs", common.ParseError(err))
+		return
+	}
+
+	var user entities.User
+	result := database.DB.Where(&entities.User{Email: changePasswordInput.Email}).First(&user)
+	if result.RowsAffected == 0 {
+		common.ResponseError(c, http.StatusNotFound, "User not found", nil)
+		return
+	}
+
+	if !common.CheckPasswordHash(changePasswordInput.OldPassword, user.Password) {
+		common.ResponseError(c, http.StatusUnauthorized, "Invalid old password", nil)
+		return
+	}
+
+	newHashPass, err := common.HashPassword(changePasswordInput.NewPassword)
+	if err != nil {
+		common.ResponseError(c, http.StatusInternalServerError, "Something went wrong", nil)
+		return
+	}
+
+	user.Password = newHashPass
+	database.DB.Save(&user)
+
+	common.ResponseSuccess(c, http.StatusOK, "Password changed successfully", nil)
+}
