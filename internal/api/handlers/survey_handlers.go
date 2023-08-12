@@ -76,3 +76,20 @@ func (h *SurveyHandler) UpdateSurvey(c *gin.Context) {
 
 	common.ResponseSuccess(c, http.StatusOK, "Survey updated successfully", result)
 }
+
+func (h *SurveyHandler) DeleteSurvey(c *gin.Context) {
+	surveyID := c.Param("id")
+
+	var survey entities.Survey
+	if err := database.DB.First(&survey, surveyID).Error; err != nil {
+		common.ResponseError(c, http.StatusNotFound, "Survey not found", nil)
+		return
+	}
+
+	if err := database.DB.Delete(&survey).Error; err != nil {
+		common.ResponseError(c, http.StatusInternalServerError, "Failed to delete survey", nil)
+		return
+	}
+
+	common.ResponseSuccess(c, http.StatusOK, "Survey deleted successfully", nil)
+}

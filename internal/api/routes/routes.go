@@ -19,4 +19,5 @@ func InitializeRoutes(router *gin.Engine) {
 	surveyGroup.Use(middlewares.JWTMiddleware())
 	surveyGroup.POST("/", surveyHandler.CreateSurvey)
 	surveyGroup.PUT("/:id", surveyHandler.UpdateSurvey)
+	surveyGroup.DELETE("/:id", surveyHandler.DeleteSurvey)
 }
