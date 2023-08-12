@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"net/http"
+	"fmt"
 
 	"strconv"
 	"time"
@@ -104,11 +105,12 @@ func (h *AuthHandler) Register(c *gin.Context) {
 }
 
 func (h *AuthHandler) Logout(c *gin.Context) {
-	claims := c.MustGet("claims").(jwt.MapClaims)
-	userID := uint(claims["id"].(float64))
+	currentUser := common.GetUserAuth(c)
+
+	fmt.Println("user id = ", currentUser.ID)
 
 	var user entities.User
-	result := database.DB.First(&user, userID)
+	result := database.DB.First(&user, currentUser.ID)
 	if result.Error != nil {
 		common.ResponseError(c, http.StatusNotFound, "User not found", nil)
 		return
