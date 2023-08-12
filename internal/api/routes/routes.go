@@ -26,8 +26,9 @@ func InitializeRoutes(router *gin.Engine) {
 	surveyGroup.GET("/surveys/my", surveyHandler.ListSurveysByCurrentUser)
 
 	questionHandler := handlers.NewQuestionHandler()
-	questionGroup := router.Group("/survey/:survey_id/question")
+	questionGroup := router.Group("/survey/question")
 	questionGroup.Use(middlewares.JWTMiddleware())
 	questionGroup.Use(middlewares.BlacklistMiddleware())
-	questionGroup.POST("/", questionHandler.AddQuestionToSurvey)
+	questionGroup.POST("/:survey_id", questionHandler.AddQuestionToSurvey)
+	questionGroup.PUT("/:question_id", questionHandler.UpdateQuestion)
 }
