@@ -52,7 +52,7 @@ func (h *SurveyHandler) UpdateSurvey(c *gin.Context) {
 		common.ResponseError(c, http.StatusBadRequest, "Invalid inputs", common.ParseError(err))
 		return
 	}
-	surveyID := c.Param("id")
+	surveyID := c.Param("survey_id")
 
 	var survey entities.Survey
 	if err := database.DB.First(&survey, surveyID).Error; err != nil {
@@ -78,7 +78,7 @@ func (h *SurveyHandler) UpdateSurvey(c *gin.Context) {
 }
 
 func (h *SurveyHandler) DeleteSurvey(c *gin.Context) {
-	surveyID := c.Param("id")
+	surveyID := c.Param("survey_id")
 
 	var survey entities.Survey
 	if err := database.DB.First(&survey, surveyID).Error; err != nil {

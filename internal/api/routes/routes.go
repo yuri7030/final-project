@@ -13,23 +13,29 @@ func InitializeRoutes(router *gin.Engine) {
 	authGroup := router.Group("/auth")
 	authGroup.POST("/login", authHandler.Login)
 	authGroup.POST("/register", authHandler.Register)
-	authGroup.POST("/logout", middlewares.JWTMiddleware(), middlewares.BlacklistMiddleware(), authHandler.Logout)
-	authGroup.POST("/change-password", middlewares.JWTMiddleware(), middlewares.BlacklistMiddleware(), authHandler.ChangePassword)
 
 	surveyHandler := handlers.NewSurveyHandler()
-	surveyGroup := router.Group("/survey")
-	surveyGroup.Use(middlewares.JWTMiddleware())
-	surveyGroup.Use(middlewares.BlacklistMiddleware())
-	surveyGroup.POST("/", surveyHandler.CreateSurvey)
-	surveyGroup.PUT("/:id", surveyHandler.UpdateSurvey)
-	surveyGroup.DELETE("/:id", surveyHandler.DeleteSurvey)
-	surveyGroup.GET("/surveys/my", surveyHandler.ListSurveysByCurrentUser)
-
 	questionHandler := handlers.NewQuestionHandler()
-	questionGroup := router.Group("/survey/question")
-	questionGroup.Use(middlewares.JWTMiddleware())
-	questionGroup.Use(middlewares.BlacklistMiddleware())
-	questionGroup.POST("/:survey_id", questionHandler.AddQuestionToSurvey)
-	questionGroup.PUT("/:question_id", questionHandler.UpdateQuestion)
-	questionGroup.DELETE("/:question_id", questionHandler.DeleteQuestion)
+
+	backOfficeGroup := router.Group("/")
+	backOfficeGroup.Use(middlewares.JWTMiddleware())
+	backOfficeGroup.Use(middlewares.BlacklistMiddleware())
+
+	backOfficeGroup.POST("/logout", authHandler.Logout)
+	backOfficeGroup.POST("/change-password", authHandler.ChangePassword)
+
+	surveyGroup := backOfficeGroup.Group("/surveys")
+	{
+		surveyGroup.GET("", surveyHandler.ListSurveysByCurrentUser)
+		surveyGroup.POST("", surveyHandler.CreateSurvey)
+		surveyGroup.PUT("/:survey_id", surveyHandler.UpdateSurvey)
+		surveyGroup.DELETE("/:survey_id", surveyHandler.DeleteSurvey)
+
+		questionGroup := surveyGroup.Group("/:survey_id/questions")
+		{
+			questionGroup.POST("", questionHandler.AddQuestionToSurvey)
+			questionGroup.PUT("/:question_id", questionHandler.UpdateQuestion)
+			questionGroup.DELETE("/:question_id", questionHandler.DeleteQuestion)
+		}
+	}
 }
