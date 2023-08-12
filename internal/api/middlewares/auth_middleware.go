@@ -2,11 +2,13 @@ package middlewares
 
 import (
 	"net/http"
-	"github.com/gin-gonic/gin"
+
 	"github.com/dgrijalva/jwt-go"
+	"github.com/gin-gonic/gin"
+	"github.com/mitchellh/mapstructure"
+	"github.com/yuri7030/final-project/internal/api/common"
 	"github.com/yuri7030/final-project/internal/api/config"
 )
-
 
 func JWTMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -32,6 +34,13 @@ func JWTMiddleware() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
+
+		var authJwt common.AuthJWT
+		err = mapstructure.Decode(token.Claims, &authJwt)
+		if err != nil {
+			panic(err)
+		}
+		c.Set("user", authJwt)
 
 		c.Next()
 	}

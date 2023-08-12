@@ -66,3 +66,11 @@ func CheckPasswordHash(password, hash string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 	return err == nil
 }
+
+func GetUserAuth(c *gin.Context) AuthJWT {
+	user, err := c.Get("user")
+	if !err {
+		panic("User auth not exist")
+	}
+	return user.(AuthJWT)
+}

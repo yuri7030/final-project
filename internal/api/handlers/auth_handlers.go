@@ -1,16 +1,19 @@
 package handlers
 
 import (
-	"fmt"
 	"net/http"
+	"fmt"
+
+	"strconv"
+	"time"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"github.com/yuri7030/final-project/internal/api/common"
+	"github.com/yuri7030/final-project/internal/api/config"
 	"github.com/yuri7030/final-project/internal/api/database"
 	"github.com/yuri7030/final-project/internal/api/entities"
 	"github.com/yuri7030/final-project/internal/api/inputs"
-	"github.com/yuri7030/final-project/internal/api/config"
 )
 
 type AuthHandler struct {
@@ -34,18 +37,24 @@ func (h *AuthHandler) Login(c *gin.Context) {
 		common.ResponseError(c, http.StatusBadRequest, "This user is not found!", nil)
 		return
 	}
-	
+
 	if !common.CheckPasswordHash(login.Password, user.Password) {
 		common.ResponseError(c, http.StatusUnauthorized, "Invalid password", nil)
 		return
 	}
 
 	token := jwt.New(jwt.SigningMethodHS256)
+	exp, err := strconv.Atoi(config.GetValue("JWT_EXPIRY_TIME_SECOND"))
+
+	ttl := time.Duration(exp) * time.Second
+	expTime := time.Now().UTC().Add(ttl).Unix()
+
 	token.Claims = jwt.MapClaims{
 		"email": login.Email,
-		"name": user.Name,
-		"role": user.Role,
-		"id": user.ID,
+		"name":  user.Name,
+		"role":  user.Role,
+		"id":    user.ID,
+		"exp":   expTime,
 	}
 
 	tokenString, err := token.SignedString([]byte(config.GetValue("JWT_KEY")))
@@ -62,7 +71,6 @@ func (h *AuthHandler) Register(c *gin.Context) {
 
 	if err := c.ShouldBindJSON(&register); err != nil {
 		errorInputs := common.ParseError(err)
-		fmt.Println(errorInputs)
 		common.ResponseError(c, http.StatusBadRequest, "Invalid inputs", errorInputs)
 		return
 	}
@@ -94,4 +102,24 @@ func (h *AuthHandler) Register(c *gin.Context) {
 
 	common.ResponseSuccess(c, http.StatusCreated, "Register successfuly", true)
 	return
+}
+
+func (h *AuthHandler) Logout(c *gin.Context) {
+	currentUser := common.GetUserAuth(c)
+
+	fmt.Println("user id = ", currentUser.ID)
+
+	var user entities.User
+	result := database.DB.First(&user, currentUser.ID)
+	if result.Error != nil {
+		common.ResponseError(c, http.StatusNotFound, "User not found", nil)
+		return
+	}
+
+	if err := database.DB.Save(&user).Error; err != nil {
+		common.ResponseError(c, http.StatusInternalServerError, "Failed to logout", nil)
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Logout successful"})
 }
