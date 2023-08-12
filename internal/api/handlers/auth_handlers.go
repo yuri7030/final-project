@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"strconv"
 	"time"
+	"strings"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
@@ -102,19 +103,19 @@ func (h *AuthHandler) Register(c *gin.Context) {
 	return
 }
 
+var TokenBlacklist = make(map[string]bool)
+
 func (h *AuthHandler) Logout(c *gin.Context) {
-	currentUser := common.GetUserAuth(c)
-	var user entities.User
-	result := database.DB.First(&user, currentUser.ID)
-	if result.Error != nil {
-		common.ResponseError(c, http.StatusNotFound, "User not found", nil)
+	authorizationHeader := c.GetHeader("Authorization")
+	if authorizationHeader == "" {
+		common.ResponseError(c, http.StatusBadRequest, "Missing Authorization header", nil)
 		return
 	}
 
-	if err := database.DB.Save(&user).Error; err != nil {
-		common.ResponseError(c, http.StatusInternalServerError, "Failed to logout", nil)
-		return
-	}
+	tokenParts := strings.Split(authorizationHeader, " ")
+	token := tokenParts[0]
 
-	c.JSON(http.StatusOK, gin.H{"message": "Logout successful"})
+	TokenBlacklist[token] = true
+
+	common.ResponseSuccess(c, http.StatusOK, "Logged out successfully", nil)
 }
