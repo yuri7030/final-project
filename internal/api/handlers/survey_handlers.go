@@ -45,3 +45,34 @@ func (h *SurveyHandler) CreateSurvey(c *gin.Context) {
 
 	common.ResponseSuccess(c, http.StatusCreated, "Survey created successfully", result)
 }
+
+func (h *SurveyHandler) UpdateSurvey(c *gin.Context) {
+	var input inputs.SurveyUpdatingInput
+	if err := c.ShouldBindJSON(&input); err != nil {
+		common.ResponseError(c, http.StatusBadRequest, "Invalid inputs", common.ParseError(err))
+		return
+	}
+	surveyID := c.Param("id")
+
+	var survey entities.Survey
+	if err := database.DB.First(&survey, surveyID).Error; err != nil {
+		common.ResponseError(c, http.StatusNotFound, "Survey not found", nil)
+		return
+	}
+
+	survey.Title = input.Title
+	survey.Description = input.Description
+
+	if err := database.DB.Save(&survey).Error; err != nil {
+		common.ResponseError(c, http.StatusInternalServerError, "Failed to update survey", nil)
+		return
+	}
+
+	result := map[string]interface{}{
+		"id":          survey.ID,
+		"title":       survey.Title,
+		"description": survey.Description,
+	}
+
+	common.ResponseSuccess(c, http.StatusOK, "Survey updated successfully", result)
+}

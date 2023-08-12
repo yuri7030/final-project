@@ -15,8 +15,8 @@ func InitializeRoutes(router *gin.Engine) {
 	authGroup.POST("/register", authHandler.Register)
 	authGroup.POST("/logout", authHandler.Logout)
 	surveyHandler := handlers.NewSurveyHandler()
-	systemGroup := router.Group("/")
-	systemGroup.Use(middlewares.JWTMiddleware())
-
-	systemGroup.POST("/surveys", surveyHandler.CreateSurvey)
+	surveyGroup := router.Group("/survey")
+	surveyGroup.Use(middlewares.JWTMiddleware())
+	surveyGroup.POST("/", surveyHandler.CreateSurvey)
+	surveyGroup.PUT("/:id", surveyHandler.UpdateSurvey)
 }

@@ -106,9 +106,6 @@ func (h *AuthHandler) Register(c *gin.Context) {
 
 func (h *AuthHandler) Logout(c *gin.Context) {
 	currentUser := common.GetUserAuth(c)
-
-	fmt.Println("user id = ", currentUser.ID)
-
 	var user entities.User
 	result := database.DB.First(&user, currentUser.ID)
 	if result.Error != nil {
