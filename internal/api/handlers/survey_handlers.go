@@ -93,3 +93,23 @@ func (h *SurveyHandler) DeleteSurvey(c *gin.Context) {
 
 	common.ResponseSuccess(c, http.StatusOK, "Survey deleted successfully", nil)
 }
+
+func (h *SurveyHandler) ListSurveysByCurrentUser(c *gin.Context) {
+	user := common.GetUserAuth(c)
+	var surveys []entities.Survey
+	if err := database.DB.Where("created_by = ?", user.ID).Find(&surveys).Error; err != nil {
+		common.ResponseError(c, http.StatusInternalServerError, "Failed to fetch surveys", nil)
+		return
+	}
+	var results []map[string]interface{}
+	for _, survey := range surveys {
+		result := map[string]interface{}{
+			"id":          survey.ID,
+			"title":       survey.Title,
+			"description": survey.Description,
+		}
+		results = append(results, result)
+	}
+
+	common.ResponseSuccess(c, http.StatusOK, "Surveys fetched successfully", results)
+}

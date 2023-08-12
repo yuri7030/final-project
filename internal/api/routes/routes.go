@@ -20,4 +20,5 @@ func InitializeRoutes(router *gin.Engine) {
 	surveyGroup.POST("/", surveyHandler.CreateSurvey)
 	surveyGroup.PUT("/:id", surveyHandler.UpdateSurvey)
 	surveyGroup.DELETE("/:id", surveyHandler.DeleteSurvey)
+	surveyGroup.GET("/surveys/my", surveyHandler.ListSurveysByCurrentUser)
 }
