@@ -2,12 +2,15 @@ package middlewares
 
 import (
 	"net/http"
+	"strings"
+
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"github.com/mitchellh/mapstructure"
 	"github.com/yuri7030/final-project/internal/api/common"
 	"github.com/yuri7030/final-project/internal/api/config"
+	"github.com/yuri7030/final-project/internal/api/handlers"
 )
 
 func JWTMiddleware() gin.HandlerFunc {
@@ -42,6 +45,30 @@ func JWTMiddleware() gin.HandlerFunc {
 		}
 		c.Set("user", authJwt)
 
+		c.Next()
+	}
+}
+
+func BlacklistMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		// Get the user's JWT token from the "Authorization" header
+		authorizationHeader := c.GetHeader("Authorization")
+		if authorizationHeader == "" {
+			common.ResponseError(c, http.StatusUnauthorized, "Missing Authorization header", nil)
+			c.Abort()
+			return
+		}
+
+		tokenParts := strings.Split(authorizationHeader, " ")
+		token := tokenParts[0]
+
+		if handlers.TokenBlacklist[token] {
+			common.ResponseError(c, http.StatusUnauthorized, "Token revoked", nil)
+			c.Abort()
+			return
+		}
+
+		// Continue processing the request if the token is valid and not blacklisted
 		c.Next()
 	}
 }
