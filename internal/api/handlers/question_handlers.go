@@ -104,3 +104,26 @@ func (h *QuestionHandler) DeleteQuestion(c *gin.Context) {
 
 	common.ResponseSuccess(c, http.StatusOK, "Question deleted successfully", nil)
 }
+
+func (h *QuestionHandler) ListQuestionsBySurvey(c *gin.Context) {
+	surveyID, err := strconv.Atoi(c.Param("survey_id"))
+	if err != nil {
+		common.ResponseError(c, http.StatusBadRequest, "Invalid survey ID", nil)
+		return
+	}
+
+	var survey entities.Survey
+	result := database.DB.First(&survey, surveyID)
+	if result.RowsAffected == 0 {
+		common.ResponseError(c, http.StatusNotFound, "Survey not found", nil)
+		return
+	}
+
+	var questions []entities.Question
+	if err := database.DB.Where("survey_id = ?", survey.ID).Find(&questions).Error; err != nil {
+		common.ResponseError(c, http.StatusInternalServerError, "Failed to fetch questions", nil)
+		return
+	}
+
+	common.ResponseSuccess(c, http.StatusOK, "Questions listed successfully", questions)
+}
