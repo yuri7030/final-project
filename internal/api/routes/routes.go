@@ -31,4 +31,5 @@ func InitializeRoutes(router *gin.Engine) {
 	questionGroup.Use(middlewares.BlacklistMiddleware())
 	questionGroup.POST("/:survey_id", questionHandler.AddQuestionToSurvey)
 	questionGroup.PUT("/:question_id", questionHandler.UpdateQuestion)
+	questionGroup.DELETE("/:question_id", questionHandler.DeleteQuestion)
 }

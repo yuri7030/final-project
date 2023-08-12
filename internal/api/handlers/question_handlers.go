@@ -82,3 +82,25 @@ func (h *QuestionHandler) UpdateQuestion(c *gin.Context) {
 
 	common.ResponseSuccess(c, http.StatusOK, "Question updated successfully", nil)
 }
+
+func (h *QuestionHandler) DeleteQuestion(c *gin.Context) {
+	questionID, err := strconv.Atoi(c.Param("question_id"))
+	if err != nil {
+		common.ResponseError(c, http.StatusBadRequest, "Invalid question ID", nil)
+		return
+	}
+
+	var question entities.Question
+	result := database.DB.First(&question, questionID)
+	if result.RowsAffected == 0 {
+		common.ResponseError(c, http.StatusNotFound, "Question not found", nil)
+		return
+	}
+
+	if err := database.DB.Delete(&question).Error; err != nil {
+		common.ResponseError(c, http.StatusInternalServerError, "Failed to delete question", nil)
+		return
+	}
+
+	common.ResponseSuccess(c, http.StatusOK, "Question deleted successfully", nil)
+}
