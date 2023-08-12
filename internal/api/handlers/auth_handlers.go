@@ -121,33 +121,35 @@ func (h *AuthHandler) Logout(c *gin.Context) {
 }
 
 func (h *AuthHandler) ChangePassword(c *gin.Context) {
-	var changePasswordInput inputs.ChangePasswordInput
-
-	if err := c.ShouldBindJSON(&changePasswordInput); err != nil {
+	var input inputs.ChangePasswordInput
+	if err := c.ShouldBindJSON(&input); err != nil {
 		common.ResponseError(c, http.StatusBadRequest, "Invalid inputs", common.ParseError(err))
 		return
 	}
 
-	var user entities.User
-	result := database.DB.Where(&entities.User{Email: changePasswordInput.Email}).First(&user)
-	if result.RowsAffected == 0 {
-		common.ResponseError(c, http.StatusNotFound, "User not found", nil)
+	user := common.GetUserAuth(c)
+
+	var dbUser entities.User
+	if err := database.DB.First(&dbUser, user.ID).Error; err != nil {
+		common.ResponseError(c, http.StatusInternalServerError, "Failed to fetch user data", nil)
 		return
 	}
 
-	if !common.CheckPasswordHash(changePasswordInput.OldPassword, user.Password) {
+	if !common.CheckPasswordHash(input.OldPassword, dbUser.Password) {
 		common.ResponseError(c, http.StatusUnauthorized, "Invalid old password", nil)
 		return
 	}
 
-	newHashPass, err := common.HashPassword(changePasswordInput.NewPassword)
+	newHashPass, err := common.HashPassword(input.NewPassword)
 	if err != nil {
-		common.ResponseError(c, http.StatusInternalServerError, "Something went wrong", nil)
+		common.ResponseError(c, http.StatusInternalServerError, "Failed to hash new password", nil)
 		return
 	}
 
-	user.Password = newHashPass
-	database.DB.Save(&user)
+	if err := database.DB.Model(&dbUser).Update("password", newHashPass).Error; err != nil {
+		common.ResponseError(c, http.StatusInternalServerError, "Failed to update password", nil)
+		return
+	}
 
 	common.ResponseSuccess(c, http.StatusOK, "Password changed successfully", nil)
 }
