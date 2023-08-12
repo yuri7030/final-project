@@ -2,8 +2,6 @@ package handlers
 
 import (
 	"net/http"
-	"fmt"
-
 	"strconv"
 	"time"
 
