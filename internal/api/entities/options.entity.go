@@ -6,7 +6,7 @@ type Option struct {
 	gorm.Model
 	QuestionID uint
 	OptionText string
-	Question Question `gorm:"foreignKey:QuestionID"`
+	Question   Question `gorm:"foreignKey:QuestionID"`
 }
 
 func (Option) TableName() string {

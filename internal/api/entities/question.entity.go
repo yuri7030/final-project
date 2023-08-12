@@ -8,7 +8,7 @@ type Question struct {
 	QuestionText string
 	AnswerType   uint
 
-	Survey Survey `gorm:"foreignKey:SurveyID"`
+	Survey  *Survey  `gorm:"foreignKey:SurveyID"`
 	Answers []Answer `gorm:"foreignKey:QuestionID"`
 	Options []Option `gorm:"foreignKey:QuestionID"`
 }
