@@ -74,3 +74,8 @@ func GetUserAuth(c *gin.Context) AuthJWT {
 	}
 	return user.(AuthJWT)
 }
+
+func PrettyPrint(v interface{}) {
+	str, _ := json.MarshalIndent(v, "", "\t")
+	fmt.Println(string(str))
+}
