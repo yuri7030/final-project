@@ -1,5 +1,15 @@
 package handlers
 
+import (
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+	"github.com/yuri7030/final-project/internal/api/common"
+	"github.com/yuri7030/final-project/internal/api/database"
+	"github.com/yuri7030/final-project/internal/api/entities"
+	"github.com/yuri7030/final-project/internal/api/inputs"
+)
+
 type QuestionHandler struct {
 }
 
@@ -7,43 +17,36 @@ func NewQuestionHandler() *QuestionHandler {
 	return &QuestionHandler{}
 }
 
-// func GetQuestions(c *gin.Context) {
-// 	surveyID, err := strconv.Atoi(c.Param("id"))
-// 	if err != nil {
-// 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid survey ID"})
-// 		return
-// 	}
+func (h *QuestionHandler) AddQuestionToSurvey(c *gin.Context) {
+	var input inputs.QuestionCreatingInput
+	if err := c.ShouldBindJSON(&input); err != nil {
+		common.ResponseError(c, http.StatusBadRequest, "Invalid inputs", common.ParseError(err))
+		return
+	}
 
-// 	for _, survey := range surveyList {
-// 		if survey.ID == surveyID {
-// 			c.JSON(http.StatusOK, survey.Questions)
-// 			return
-// 		}
-// 	}
+	surveyID := c.Param("survey_id")
+	var survey entities.Survey
+	if err := database.DB.First(&survey, surveyID).Error; err != nil {
+		common.ResponseError(c, http.StatusNotFound, "Survey not found", nil)
+		return
+	}
 
-// 	c.JSON(http.StatusNotFound, gin.H{"error": "Survey not found"})
-// }
+	question := entities.Question{
+		SurveyID:     survey.ID,
+		QuestionText: input.QuestionText,
+		AnswerType:   input.AnswerType,
+	}
 
-// func UpdateQuestions(c *gin.Context) {
-// 	surveyID, err := strconv.Atoi(c.Param("id"))
-// 	if err != nil {
-// 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid survey ID"})
-// 		return
-// 	}
+	if err := database.DB.Create(&question).Error; err != nil {
+		common.ResponseError(c, http.StatusInternalServerError, "Failed to create question", nil)
+		return
+	}
 
-// 	var updateSurvey models.Survey
-// 	if err := c.ShouldBindJSON(&updateSurvey); err != nil {
-// 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-// 		return
-// 	}
+	result := map[string]interface{}{
+		"id":           question.ID,
+		"questionText": question.QuestionText,
+		"answerType":   question.AnswerType,
+	}
 
-// 	for i, survey := range surveyList {
-// 		if survey.ID == surveyID {
-// 			surveys[i].Questions = updateSurvey.Questions
-// 			c.JSON(http.StatusOK, surveys[i])
-// 			return
-// 		}
-// 	}
-
-// 	c.JSON(http.StatusNotFound, gin.H{"error": "Survey not found"})
-// }
+	common.ResponseSuccess(c, http.StatusCreated, "Question added successfully", result)
+}
