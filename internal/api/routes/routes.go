@@ -31,11 +31,12 @@ func InitializeRoutes(router *gin.Engine) {
 		surveyGroup.PUT("/:survey_id", surveyHandler.UpdateSurvey)
 		surveyGroup.DELETE("/:survey_id", surveyHandler.DeleteSurvey)
 
-		questionGroup := surveyGroup.Group("/:survey_id/questions")
+		questionGroup := surveyGroup.Group("/questions")
 		{
-			questionGroup.POST("", questionHandler.AddQuestionToSurvey)
+			questionGroup.POST("/:survey_id", questionHandler.AddQuestionToSurvey)
 			questionGroup.PUT("/:question_id", questionHandler.UpdateQuestion)
 			questionGroup.DELETE("/:question_id", questionHandler.DeleteQuestion)
+			questionGroup.GET("/:survey_id", questionHandler.ListQuestionsBySurvey)
 		}
 	}
 }
