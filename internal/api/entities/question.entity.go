@@ -6,7 +6,7 @@ type Question struct {
 	gorm.Model
 	SurveyID     uint
 	QuestionText string
-	AnswerType   uint	// 1: Text, 2: Radio, 3: Checkbox
+	AnswerType   int	// 1: Text, 2: Radio, 3: Checkbox
 
 	Survey  *Survey  `gorm:"foreignKey:SurveyID"`
 	Answers []Answer `gorm:"foreignKey:QuestionID"`
