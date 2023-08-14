@@ -106,3 +106,65 @@ func (h *QuestionHandler) DeleteAllOptions(c *gin.Context) {
 
 	common.ResponseSuccess(c, http.StatusOK, "All options deleted successfully", nil)
 }
+
+func (h *QuestionHandler) UpdateOption(c *gin.Context) {
+	optionID, err := strconv.Atoi(c.Param("option_id"))
+	if err != nil {
+		common.ResponseError(c, http.StatusBadRequest, "Invalid option ID", nil)
+		return
+	}
+
+	var input inputs.OptionUpdatingInput
+	if err := c.ShouldBindJSON(&input); err != nil {
+		common.ResponseError(c, http.StatusBadRequest, "Invalid inputs", common.ParseError(err))
+		return
+	}
+
+	var option entities.Option
+	result := database.DB.First(&option, optionID)
+	if result.RowsAffected == 0 {
+		common.ResponseError(c, http.StatusNotFound, "Option not found", nil)
+		return
+	}
+
+	option.OptionText = input.OptionText
+
+	if err := database.DB.Save(&option).Error; err != nil {
+		common.ResponseError(c, http.StatusInternalServerError, "Failed to update option", nil)
+		return
+	}
+
+	common.ResponseSuccess(c, http.StatusOK, "Option updated successfully", nil)
+}
+
+func (h *QuestionHandler) ListOptionsByQuestion(c *gin.Context) {
+	questionID, err := strconv.Atoi(c.Param("question_id"))
+	if err != nil {
+		common.ResponseError(c, http.StatusBadRequest, "Invalid question ID", nil)
+		return
+	}
+
+	var question entities.Question
+	result := database.DB.First(&question, questionID)
+	if result.RowsAffected == 0 {
+		common.ResponseError(c, http.StatusNotFound, "Question not found", nil)
+		return
+	}
+
+	var options []entities.Option
+	if err := database.DB.Where("question_id = ?", question.ID).Find(&options).Error; err != nil {
+		common.ResponseError(c, http.StatusInternalServerError, "Failed to fetch options", nil)
+		return
+	}
+	var results []map[string]interface{}
+	for _, option := range options {
+		result := map[string]interface{}{
+			"id":          option.ID,
+			"optionText":  option.OptionText,
+		}
+		results = append(results, result)
+	}
+
+
+	common.ResponseSuccess(c, http.StatusOK, "Options fetched successfully", results)
+}
