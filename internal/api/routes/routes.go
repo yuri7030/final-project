@@ -38,5 +38,9 @@ func InitializeRoutes(router *gin.Engine) {
 	{
 		questionGroup.PUT("/:question_id", questionHandler.UpdateQuestion)
 		questionGroup.DELETE("/:question_id", questionHandler.DeleteQuestion)
+		optionGroup := questionGroup.Group("/options")
+		{
+			optionGroup.POST("/:question_id", questionHandler.AddOptionsToQuestion)
+		}
 	}
 }
