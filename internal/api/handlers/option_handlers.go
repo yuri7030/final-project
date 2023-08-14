@@ -71,7 +71,7 @@ func (h *QuestionHandler) DeleteOption(c *gin.Context) {
 	}
 
 	var option entities.Option
-	result = database.DB.First(&option, optionID)
+	result := database.DB.First(&option, optionID)
 	if result.RowsAffected == 0 {
 		common.ResponseError(c, http.StatusNotFound, "Option not found", nil)
 		return
