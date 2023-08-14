@@ -1,4 +1,4 @@
-package enums
+package constants
 
 const (
 	TextAnswer int = 1

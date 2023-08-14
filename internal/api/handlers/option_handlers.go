@@ -8,8 +8,9 @@ import (
 	"github.com/yuri7030/final-project/internal/api/common"
 	"github.com/yuri7030/final-project/internal/api/database"
 	"github.com/yuri7030/final-project/internal/api/entities"
-	"github.com/yuri7030/final-project/internal/api/inputs"
-	"github.com/yuri7030/final-project/internal/api/enums"
+	"github.com/yuri7030/final-project/internal/api/inputs"	
+	"github.com/yuri7030/final-project/internal/constants"
+
 )
 
 type OptionHandler struct {
@@ -39,8 +40,8 @@ func (h *QuestionHandler) AddOptionsToQuestion(c *gin.Context) {
 		return
 	}
 
-	if question.AnswerType != enums.RadioAnswer && 
-		question.AnswerType != enums.CheckboxAnswer {
+	if question.AnswerType != constants.RadioAnswer && 
+		question.AnswerType != constants.CheckboxAnswer {
 		common.ResponseError(c, http.StatusBadRequest, "Cannot add options for this question type", nil)
 		return
 	}
