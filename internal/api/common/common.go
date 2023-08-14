@@ -3,6 +3,8 @@ package common
 import (
 	"encoding/json"
 	"fmt"
+	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -78,4 +80,12 @@ func GetUserAuth(c *gin.Context) AuthJWT {
 func PrettyPrint(v interface{}) {
 	str, _ := json.MarshalIndent(v, "", "\t")
 	fmt.Println(string(str))
+}
+
+func SerializeUintArray(arr []uint) string {
+	strArr := make([]string, len(arr))
+	for i, val := range arr {
+		strArr[i] = strconv.FormatUint(uint64(val), 10)
+	}
+	return strings.Join(strArr, ",")
 }
