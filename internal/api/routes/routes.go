@@ -40,10 +40,12 @@ func InitializeRoutes(router *gin.Engine) {
 		questionGroup.DELETE("/:question_id", questionHandler.DeleteQuestion)
 		questionGroup.POST("/:question_id/options", questionHandler.AddOptionsToQuestion)
 		questionGroup.DELETE("/:question_id/options", questionHandler.DeleteAllOptions)
+		questionGroup.GET("/:question_id/options", questionHandler.ListOptionsByQuestion)
 	}
 	
 	optionsGroup := backOfficeGroup.Group("/options")
 	{
 		optionsGroup.DELETE("/:option_id", questionHandler.DeleteOption)
+		optionsGroup.PUT("/:option_id", questionHandler.UpdateOption)
 	}
 }
