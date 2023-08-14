@@ -16,6 +16,7 @@ func InitializeRoutes(router *gin.Engine) {
 
 	surveyHandler := handlers.NewSurveyHandler()
 	questionHandler := handlers.NewQuestionHandler()
+	answerHandler := handlers.NewAnswerHandler()
 
 	backOfficeGroup := router.Group("/")
 	backOfficeGroup.Use(middlewares.JWTMiddleware())
@@ -32,6 +33,7 @@ func InitializeRoutes(router *gin.Engine) {
 		surveyGroup.DELETE("/:survey_id", surveyHandler.DeleteSurvey)
 		surveyGroup.GET("/:survey_id/questions", questionHandler.ListQuestionsBySurvey)
 		surveyGroup.POST("/:survey_id/questions", questionHandler.AddQuestionToSurvey)
+		surveyGroup.POST("/:survey_id/submit", answerHandler.SubmitSurveyAnswers)
 	}
 
 	questionGroup := backOfficeGroup.Group("/questions")

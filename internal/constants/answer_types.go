@@ -5,3 +5,9 @@ const (
 	RadioAnswer int = 2
 	CheckboxAnswer int = 3
 )
+
+var AnswerTypes = map[int]string{
+	TextAnswer: "Text",
+	RadioAnswer: "Radio",
+	CheckboxAnswer: "Checkbox",
+}

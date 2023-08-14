@@ -156,6 +156,7 @@ func (h *QuestionHandler) ListOptionsByQuestion(c *gin.Context) {
 		common.ResponseError(c, http.StatusInternalServerError, "Failed to fetch options", nil)
 		return
 	}
+	
 	var results []map[string]interface{}
 	for _, option := range options {
 		result := map[string]interface{}{
@@ -164,7 +165,6 @@ func (h *QuestionHandler) ListOptionsByQuestion(c *gin.Context) {
 		}
 		results = append(results, result)
 	}
-
 
 	common.ResponseSuccess(c, http.StatusOK, "Options fetched successfully", results)
 }

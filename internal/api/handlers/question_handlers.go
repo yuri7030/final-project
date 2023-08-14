@@ -9,6 +9,7 @@ import (
 	"github.com/yuri7030/final-project/internal/api/database"
 	"github.com/yuri7030/final-project/internal/api/entities"
 	"github.com/yuri7030/final-project/internal/api/inputs"
+	"github.com/yuri7030/final-project/internal/constants"
 )
 
 type QuestionHandler struct {
@@ -125,5 +126,15 @@ func (h *QuestionHandler) ListQuestionsBySurvey(c *gin.Context) {
 		return
 	}
 
-	common.ResponseSuccess(c, http.StatusOK, "Questions listed successfully", questions)
+	var results []map[string]interface{}
+	for _, question := range questions {
+		result := map[string]interface{}{
+			"id":          question.ID,
+			"questionText":  question.QuestionText,
+			"answerType": constants.AnswerTypes[question.AnswerType],
+		}
+		results = append(results, result)
+	}
+
+	common.ResponseSuccess(c, http.StatusOK, "Questions listed successfully", results)
 }
