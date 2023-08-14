@@ -62,3 +62,47 @@ func (h *QuestionHandler) AddOptionsToQuestion(c *gin.Context) {
 
 	common.ResponseSuccess(c, http.StatusCreated, "Options added successfully", nil)
 }
+
+func (h *QuestionHandler) DeleteOption(c *gin.Context) {
+	optionID, err := strconv.Atoi(c.Param("option_id"))
+	if err != nil {
+		common.ResponseError(c, http.StatusBadRequest, "Invalid option ID", nil)
+		return
+	}
+
+	var option entities.Option
+	result = database.DB.First(&option, optionID)
+	if result.RowsAffected == 0 {
+		common.ResponseError(c, http.StatusNotFound, "Option not found", nil)
+		return
+	}
+
+	if err := database.DB.Delete(&option).Error; err != nil {
+		common.ResponseError(c, http.StatusInternalServerError, "Failed to delete option", nil)
+		return
+	}
+
+	common.ResponseSuccess(c, http.StatusOK, "Option deleted successfully", nil)
+}
+
+func (h *QuestionHandler) DeleteAllOptions(c *gin.Context) {
+	questionID, err := strconv.Atoi(c.Param("question_id"))
+	if err != nil {
+		common.ResponseError(c, http.StatusBadRequest, "Invalid question ID", nil)
+		return
+	}
+
+	var question entities.Question
+	result := database.DB.First(&question, questionID)
+	if result.RowsAffected == 0 {
+		common.ResponseError(c, http.StatusNotFound, "Question not found", nil)
+		return
+	}
+
+	if err := database.DB.Where("question_id = ?", question.ID).Delete(&entities.Option{}).Error; err != nil {
+		common.ResponseError(c, http.StatusInternalServerError, "Failed to delete options", nil)
+		return
+	}
+
+	common.ResponseSuccess(c, http.StatusOK, "All options deleted successfully", nil)
+}
