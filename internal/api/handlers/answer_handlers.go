@@ -100,36 +100,3 @@ func validateAnswer(answerType int, answerInput inputs.SurveyAnswerInputItem) bo
 		return false
 	}
 }
-
-func (h *AnswerHandler) AggregateSurveyAnswers(c *gin.Context) {
-    surveyID, err := strconv.Atoi(c.Param("survey_id"))
-	if err != nil {
-		common.ResponseError(c, http.StatusBadRequest, "Invalid survey ID", nil)
-		return
-	}
-
-	var answers []*entities.Answer
-	result := database.DB.Where("question_id IN (SELECT id FROM questions WHERE survey_id = ?)", surveyID).Find(&answers)
-	if result.Error != nil {
-		common.ResponseError(c, http.StatusInternalServerError, "Failed to fetch answers", nil)
-		return
-	}
-
-	var uniqueGUIDs []string
-	countByGUID := make(map[string]int)
-
-	for _, answer := range answers {
-		if _, exists := countByGUID[answer.GUID]; !exists {
-			uniqueGUIDs = append(uniqueGUIDs, answer.GUID)
-		}
-		countByGUID[answer.GUID]++
-	}
-
-	response := struct {
-		TotalRespondents int        `json:"total_respondents"`
-	}{
-		TotalRespondents: len(uniqueGUIDs),
-	}
-
-	common.ResponseSuccess(c, http.StatusOK, "Survey response count retrieved successfully", response)
-}
