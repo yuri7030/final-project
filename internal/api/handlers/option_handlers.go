@@ -64,22 +64,9 @@ func (h *QuestionHandler) AddOptionsToQuestion(c *gin.Context) {
 }
 
 func (h *QuestionHandler) DeleteOption(c *gin.Context) {
-	questionID, err := strconv.Atoi(c.Param("question_id"))
-	if err != nil {
-		common.ResponseError(c, http.StatusBadRequest, "Invalid question ID", nil)
-		return
-	}
-
 	optionID, err := strconv.Atoi(c.Param("option_id"))
 	if err != nil {
 		common.ResponseError(c, http.StatusBadRequest, "Invalid option ID", nil)
-		return
-	}
-
-	var question entities.Question
-	result := database.DB.First(&question, questionID)
-	if result.RowsAffected == 0 {
-		common.ResponseError(c, http.StatusNotFound, "Question not found", nil)
 		return
 	}
 
@@ -87,11 +74,6 @@ func (h *QuestionHandler) DeleteOption(c *gin.Context) {
 	result = database.DB.First(&option, optionID)
 	if result.RowsAffected == 0 {
 		common.ResponseError(c, http.StatusNotFound, "Option not found", nil)
-		return
-	}
-
-	if option.QuestionID != question.ID {
-		common.ResponseError(c, http.StatusBadRequest, "Option does not belong to the specified question", nil)
 		return
 	}
 
