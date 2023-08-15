@@ -36,6 +36,18 @@ Survey data wouldn't be complete without answers from respondents. With this fea
 
 Understanding the number of users who have responded to a survey is crucial for analysis. This feature aggregates the total number of users who have answered a specific survey.
 
+### 8. Get the survey with the least respondents
+
+This feature shows the survey with the least respondents which is criticle for the users in managing their surveys.
+
+### 9. Get the survey with the most respondents
+
+This feature shows the survey with the most respondents which is criticle for the users in managing their surveys.
+
+### 10. List all surveys of a current user and aggregate the sum of respondents for each survey
+
+This feature is also crucial and convenient for users in managing their surveys.
+
 ## Unit Tests Coverage
 
 We take software quality seriously, and to ensure the reliability and robustness of each feature, we have provided comprehensive unit tests. These tests thoroughly exercise the functionalities and handle various edge cases to guarantee that the project meets high standards.
@@ -53,6 +65,7 @@ To get started with the Google Form Clone Project, follow these steps:
 ## How to run
 
 ### Testing
+
 `go test ./test -v`
 
 ## Contribution
