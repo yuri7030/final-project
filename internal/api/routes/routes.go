@@ -56,5 +56,6 @@ func InitializeRoutes(router *gin.Engine) {
 	statisticGroup := backOfficeGroup.Group("/statistics")
 	{
 		statisticGroup.GET("/surveys/most-respondents", statisticsHandler.GetSurveyWithMostRespondents)
+		statisticGroup.GET("/surveys/least-respondents", statisticsHandler.GetSurveyWithLeastRespondents)
 	}
 }
