@@ -1,7 +1,6 @@
 package handler_test
 
 import (
-	"encoding/json"
 	"net/http"
 	"testing"
 
@@ -22,9 +21,8 @@ func TestAuthHandler_Login(t *testing.T) {
 			"email":    "",
 			"password": "",
 		}
-		jsonValue, _ := json.Marshal(payload)
 
-		w, _ := callApi("/auth/login", handlers.NewAuthHandler().Login, jsonValue, nil)
+		w, _ := callApi("/auth/login", handlers.NewAuthHandler().Login, payload, nil)
 		assert.Equal(t, http.StatusBadRequest, w.Code)
 	})
 
@@ -33,9 +31,8 @@ func TestAuthHandler_Login(t *testing.T) {
 			"email":    "",
 			"password": "abc123456",
 		}
-		jsonValue, _ := json.Marshal(payload)
 
-		w, _ := callApi("/auth/login", handlers.NewAuthHandler().Login, jsonValue, nil)
+		w, _ := callApi("/auth/login", handlers.NewAuthHandler().Login, payload, nil)
 		assert.Equal(t, http.StatusBadRequest, w.Code)
 	})
 
@@ -44,9 +41,8 @@ func TestAuthHandler_Login(t *testing.T) {
 			"email":    "user_gmail.com",
 			"password": "abc123456",
 		}
-		jsonValue, _ := json.Marshal(payload)
 
-		w, _ := callApi("/auth/login", handlers.NewAuthHandler().Login, jsonValue, nil)
+		w, _ := callApi("/auth/login", handlers.NewAuthHandler().Login, payload, nil)
 		assert.Equal(t, http.StatusBadRequest, w.Code)
 	})
 
@@ -55,9 +51,7 @@ func TestAuthHandler_Login(t *testing.T) {
 			"email":    "user-notfound@gmail.com",
 			"password": "abc123456",
 		}
-		jsonValue, _ := json.Marshal(payload)
-
-		w, _ := callApi("/auth/login", handlers.NewAuthHandler().Login, jsonValue, nil)
+		w, _ := callApi("/auth/login", handlers.NewAuthHandler().Login, payload, nil)
 		assert.Equal(t, http.StatusBadRequest, w.Code)
 	})
 
