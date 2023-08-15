@@ -2,6 +2,7 @@ package handler_test
 
 import (
 	"bytes"
+	"encoding/json"
 	"log"
 	"net/http"
 	"net/http/httptest"
@@ -21,7 +22,8 @@ func SetUpDb() {
 	database.ConnectDatabase()
 }
 
-func callApi(apiPath string, handler gin.HandlerFunc, jsonValue []byte, headers map[string]interface{}) (*httptest.ResponseRecorder, *http.Request) {
+func callApi(apiPath string, handler gin.HandlerFunc, payload interface{}, headers map[string]interface{}) (*httptest.ResponseRecorder, *http.Request) {
+	jsonValue, _ := json.Marshal(payload)
 	router := gin.Default()
 	router.POST(apiPath, handler)
 	req, _ := http.NewRequest(http.MethodPost, "/auth/login", bytes.NewBuffer(jsonValue))

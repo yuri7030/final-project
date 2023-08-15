@@ -89,9 +89,8 @@ func TestAuthHandler_Login(t *testing.T) {
 			"email":    userLogin.Email,
 			"password": plainpass,
 		}
-		jsonValue, _ := json.Marshal(payload)
 
-		w, _ := callApi("/auth/login", handlers.NewAuthHandler().Login, jsonValue, nil)
+		w, _ := callApi("/auth/login", handlers.NewAuthHandler().Login, payload, nil)
 		deleteDataLogin()
 
 		assert.Equal(t, http.StatusOK, w.Code)
