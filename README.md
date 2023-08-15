@@ -50,6 +50,11 @@ To get started with the Google Form Clone Project, follow these steps:
 4. Explore and test each feature to see them in action.
 5. Review the unit tests to gain insights into how each feature is covered.
 
+## How to run
+
+### Testing
+`go test ./test -v`
+
 ## Contribution
 
 If you find any issues or have suggestions for improvement, we welcome your contributions. Please follow the guidelines outlined in the [Contributing](CONTRIBUTING.md) file.
