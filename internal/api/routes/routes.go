@@ -34,6 +34,7 @@ func InitializeRoutes(router *gin.Engine) {
 		surveyGroup.DELETE("/:survey_id", surveyHandler.DeleteSurvey)
 		surveyGroup.GET("/:survey_id/questions", questionHandler.ListQuestionsBySurvey)
 		surveyGroup.POST("/:survey_id/questions", questionHandler.AddQuestionToSurvey)
+		surveyGroup.POST("/:survey_id/multi-questions/", questionHandler.AddMultipleQuestionToSurvey)
 		surveyGroup.POST("/:survey_id/submit", answerHandler.SubmitSurveyAnswers)
 		surveyGroup.GET("/:survey_id/number-people-answer", answerHandler.AggregateSurveyAnswers)
 	}

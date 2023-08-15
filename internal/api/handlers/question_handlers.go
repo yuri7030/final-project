@@ -53,6 +53,42 @@ func (h *QuestionHandler) AddQuestionToSurvey(c *gin.Context) {
 	common.ResponseSuccess(c, http.StatusCreated, "Question added successfully", result)
 }
 
+func (h *QuestionHandler) AddMultipleQuestionToSurvey(c *gin.Context) {
+	var input inputs.QuestionMultiCreatingInput
+	if err := c.ShouldBindJSON(&input); err != nil {
+		common.ResponseError(c, http.StatusBadRequest, "Invalid inputs", common.ParseError(err))
+		return
+	}
+
+	surveyID := c.Param("survey_id")
+	var survey entities.Survey
+	if err := database.DB.First(&survey, surveyID).Error; err != nil {
+		common.ResponseError(c, http.StatusNotFound, "Survey not found", nil)
+		return
+	}
+
+	result := make([]interface{}, 0)
+	for _, q := range input.Questions {
+		question := entities.Question{
+			SurveyID:     survey.ID,
+			QuestionText: q.QuestionText,
+			AnswerType:   q.AnswerType,
+		}
+		if err := database.DB.Create(&question).Error; err != nil {
+			common.ResponseError(c, http.StatusInternalServerError, "Failed to create question", nil)
+			return
+		}
+		curResult := map[string]interface{}{
+			"id":           question.ID,
+			"questionText": question.QuestionText,
+			"answerType":   question.AnswerType,
+		}
+		result = append(result, curResult)
+	}
+
+	common.ResponseSuccess(c, http.StatusCreated, "Questions added successfully", result)
+}
+
 func (h *QuestionHandler) UpdateQuestion(c *gin.Context) {
 	var input inputs.QuestionUpdatingInput
 	if err := c.ShouldBindJSON(&input); err != nil {
@@ -129,9 +165,9 @@ func (h *QuestionHandler) ListQuestionsBySurvey(c *gin.Context) {
 	var results []map[string]interface{}
 	for _, question := range questions {
 		result := map[string]interface{}{
-			"id":          question.ID,
-			"questionText":  question.QuestionText,
-			"answerType": constants.AnswerTypes[question.AnswerType],
+			"id":           question.ID,
+			"questionText": question.QuestionText,
+			"answerType":   constants.AnswerTypes[question.AnswerType],
 		}
 		results = append(results, result)
 	}
