@@ -34,7 +34,7 @@ func InitializeRoutes(router *gin.Engine) {
 		surveyGroup.GET("/:survey_id/questions", questionHandler.ListQuestionsBySurvey)
 		surveyGroup.POST("/:survey_id/questions", questionHandler.AddQuestionToSurvey)
 		surveyGroup.POST("/:survey_id/submit", answerHandler.SubmitSurveyAnswers)
-				surveyGroup.GET("/:survey_id/number-people-answer", answerHandler.AggregateSurveyAnswers)
+		surveyGroup.GET("/:survey_id/number-people-answer", answerHandler.AggregateSurveyAnswers)
 	}
 
 	questionGroup := backOfficeGroup.Group("/questions")
@@ -50,5 +50,10 @@ func InitializeRoutes(router *gin.Engine) {
 	{
 		optionsGroup.DELETE("/:option_id", questionHandler.DeleteOption)
 		optionsGroup.PUT("/:option_id", questionHandler.UpdateOption)
+	}
+	
+	statisticGroup := backOfficeGroup.Group("/statistics")
+	{
+		statisticGroup.GET("/surveys/most-respondents", surveyHandler.GetSurveyWithMostRespondents)
 	}
 }

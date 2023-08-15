@@ -113,3 +113,47 @@ func (h *SurveyHandler) ListSurveysByCurrentUser(c *gin.Context) {
 
 	common.ResponseSuccess(c, http.StatusOK, "Surveys fetched successfully", results)
 }
+
+func (h *SurveyHandler) GetSurveyWithMostRespondents(c *gin.Context) {
+	user := common.GetUserAuth(c)
+
+	var survey entities.Survey
+	var maxRespondents int64
+
+	var surveys []entities.Survey
+	if err := database.DB.Where("created_by = ?", user.ID).Find(&surveys).Error; err != nil {
+		common.ResponseError(c, http.StatusInternalServerError, "Failed to fetch surveys", nil)
+		return
+	}
+
+	for _, s := range surveys {
+		var count int64
+		if err := database.DB.Model(&entities.Answer{}).
+		Joins("JOIN questions ON questions.id = answers.question_id").
+		Where("questions.survey_id = ?", s.ID).
+		Where("answers.guid IS NOT NULL").
+		Group("answers.guid").
+		Count(&count).
+		Error; err != nil {
+			common.ResponseError(c, http.StatusInternalServerError, "Failed to count respondents", nil)
+			return
+		}
+
+		if count > maxRespondents {
+			maxRespondents = count
+			survey = s
+		}
+	}
+
+	response := struct {
+		SurveyID         uint   `json:"survey_id"`
+		SurveyTitle      string `json:"survey_title"`
+		RespondentCount  int64  `json:"respondent_count"`
+	}{
+		SurveyID:         survey.ID,
+		SurveyTitle:      survey.Title,
+		RespondentCount:  maxRespondents,
+	}
+
+	common.ResponseSuccess(c, http.StatusOK, "Survey with most respondents retrieved successfully", response)
+}
