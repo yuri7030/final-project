@@ -32,16 +32,7 @@ func (h *StatictisHandler) GetSurveyWithMostRespondents(c *gin.Context) {
 		"COUNT(DISTINCT answers.guid) AS RespondentCount",
 	}
 
-	database.DB
-		.Table("surveys")
-		.Select(selectField)
-		.Joins("join questions ON questions.survey_id = surveys.id")
-		.Joins("join answers ON answers.question_id = questions.id")
-		.Where("surveys.created_by = ?", user.ID)
-		.Group("surveys.id")
-		.Order("RespondentCount DESC")
-		.Limit(1)
-		.Scan(&result)
+	database.DB.Table("surveys").Select(selectField).Joins("join questions ON questions.survey_id = surveys.id").Joins("join answers ON answers.question_id = questions.id").Where("surveys.created_by = ?", user.ID).Group("surveys.id").Order("RespondentCount DESC").Limit(1).Scan(&result)
 
 	common.ResponseSuccess(c, http.StatusOK, "Survey with most respondents retrieved successfully", result)
 	return
