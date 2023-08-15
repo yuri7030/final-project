@@ -17,6 +17,7 @@ func InitializeRoutes(router *gin.Engine) {
 	surveyHandler := handlers.NewSurveyHandler()
 	questionHandler := handlers.NewQuestionHandler()
 	answerHandler := handlers.NewAnswerHandler()
+	statisticsHandler := handlers.NewStatictisHandler()
 
 	backOfficeGroup := router.Group("/")
 	backOfficeGroup.Use(middlewares.JWTMiddleware())
@@ -45,15 +46,15 @@ func InitializeRoutes(router *gin.Engine) {
 		questionGroup.DELETE("/:question_id/options", questionHandler.DeleteAllOptions)
 		questionGroup.GET("/:question_id/options", questionHandler.ListOptionsByQuestion)
 	}
-	
+
 	optionsGroup := backOfficeGroup.Group("/options")
 	{
 		optionsGroup.DELETE("/:option_id", questionHandler.DeleteOption)
 		optionsGroup.PUT("/:option_id", questionHandler.UpdateOption)
 	}
-	
+
 	statisticGroup := backOfficeGroup.Group("/statistics")
 	{
-		statisticGroup.GET("/surveys/most-respondents", surveyHandler.GetSurveyWithMostRespondents)
+		statisticGroup.GET("/surveys/most-respondents", statisticsHandler.GetSurveyWithMostRespondents)
 	}
 }

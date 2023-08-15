@@ -22,7 +22,7 @@ func ConnectDatabase() {
 	dbPath := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", dbUser, dBPassword, dbHost, dbPort, dbName)
 
 	database, err := gorm.Open(mysql.Open(dbPath), &gorm.Config{
-		Logger: logger.Default.LogMode(logger.Silent),
+		Logger: logger.Default.LogMode(logger.Info),
 	})
 
 	if err != nil {
