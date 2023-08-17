@@ -65,10 +65,12 @@ func (h *AuthHandler) Login(c *gin.Context) {
 	response := struct {
 		Token string `json:"token"`
 		Name string `json:"name"`
+		Email string `json:"email"`
 		Role int `json:"role"`
 	}{
 		Token: tokenString,
 		Name: user.Name,
+		Email: user.Email,
 		Role: user.Role,
 	}
 
@@ -213,5 +215,23 @@ func (h *AuthHandler) UpdateProfile(c *gin.Context) {
 }
 
 func (h* AuthHandler) ValidateToken(c *gin.Context) {
-	common.ResponseSuccess(c, http.StatusOK, "Token is valid", nil)
+	user := common.GetUserAuth(c)
+
+	var dbUser entities.User
+	if err := database.DB.First(&dbUser, user.ID).Error; err != nil {
+		common.ResponseError(c, http.StatusInternalServerError, "Failed to fetch user data", nil)
+		return
+	}
+
+	response := struct {
+		Name string `json:"name"`
+		Email string `json:"email"`
+		Role int `json:"role"`
+	}{
+		Name: dbUser.Name,
+		Email: dbUser.Email,
+		Role: dbUser.Role,
+	}
+
+	common.ResponseSuccess(c, http.StatusOK, "Token is valid", response)
 }
