@@ -38,3 +38,9 @@ func callApi(apiPath string, handler gin.HandlerFunc, payload interface{}, heade
 	router.ServeHTTP(w, req)
 	return w, req
 }
+
+func SetupTestRouter() *gin.Engine {
+	gin.SetMode(gin.TestMode)
+	router := gin.Default()
+	return router
+}
