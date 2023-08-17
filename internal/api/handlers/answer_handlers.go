@@ -7,7 +7,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/gin-gonic/gin"
 	"github.com/yuri7030/final-project/internal/api/common"
-	"github.com/yuri7030/final-project/internal/constants"
+	"github.com/yuri7030/final-project/internal/constants/answer_type_enums"
 	"github.com/yuri7030/final-project/internal/api/database"
 	"github.com/yuri7030/final-project/internal/api/entities"
 	"github.com/yuri7030/final-project/internal/api/inputs"
@@ -62,9 +62,9 @@ func (h *AnswerHandler) SubmitSurveyAnswers(c *gin.Context) {
 			AnswerText: answerInput.AnswerText,
 		}
 
-		if question.AnswerType == constants.RadioAnswer {
+		if question.AnswerType == answer_type_enums.RadioAnswer {
 			answer.SingleOptionID = answerInput.SingleOptionID
-		} else if question.AnswerType == constants.CheckboxAnswer {
+		} else if question.AnswerType == answer_type_enums.CheckboxAnswer {
 			answer.MultipleOptionIDs = common.SerializeUintArray(answerInput.MultipleOptionIDs)
 		}
 
@@ -90,11 +90,11 @@ func findQuestionByID(questions []*entities.Question, questionID uint) *entities
 
 func validateAnswer(answerType int, answerInput inputs.SurveyAnswerInputItem) bool {
 	switch answerType {
-	case constants.TextAnswer:
+	case answer_type_enums.TextAnswer:
 		return answerInput.AnswerText != ""
-	case constants.RadioAnswer:
+	case answer_type_enums.RadioAnswer:
 		return answerInput.SingleOptionID != 0
-	case constants.CheckboxAnswer:
+	case answer_type_enums.CheckboxAnswer:
 		return answerInput.MultipleOptionIDs != nil && len(answerInput.MultipleOptionIDs) > 0
 	default:
 		return false
