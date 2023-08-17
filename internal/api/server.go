@@ -29,7 +29,9 @@ func NewServer() *Server {
 
 	
 	config := cors.DefaultConfig()
-	config.AllowOrigins = []string{"http://localhost:3000"}
+	config.AllowOrigins = []string{
+		// "http://localhost:3000"
+	}
 	config.AllowHeaders = []string{"Origin", "Content-Type"}
 	config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE"}
 	server.router.Use(cors.New(config))
