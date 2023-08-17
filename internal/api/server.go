@@ -3,6 +3,7 @@ package api
 import (
 	"log"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"github.com/yuri7030/final-project/internal/api/database"
@@ -25,6 +26,13 @@ func NewServer() *Server {
 	}
 
 	database.ConnectDatabase()
+
+	
+	config := cors.DefaultConfig()
+	config.AllowOrigins = []string{"http://localhost:3000"}
+	config.AllowHeaders = []string{"Origin", "Content-Type"}
+	config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE"}
+	server.router.Use(cors.New(config))
 
 	routes.InitializeRoutes(server.router)
 
