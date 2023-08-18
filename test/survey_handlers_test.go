@@ -1,46 +1,41 @@
 package handler_test
 
 import (
-	"bytes"
 	"net/http"
-	"net/http/httptest"
 	"testing"
-	"encoding/json"
 
+	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
-	"github.com/yuri7030/final-project/internal/api/database"
 	"github.com/yuri7030/final-project/internal/api/handlers"
 	"github.com/yuri7030/final-project/internal/api/inputs"
 )
 
 func TestSurveyHandler_CreateSurvey(t *testing.T) {
-	router := SetupTestRouter()
-	database.ConnectDatabase()
+	gin.SetMode(gin.TestMode)
+	initTest := NewInitTest()
+	initTest.SetUpDb()
 
 	handler := handlers.NewSurveyHandler()
-
 	t.Run("Valid input", func(t *testing.T) {
-		input := inputs.SurveyCreatingInput{
+		initTest.CreateDataLogin()
+		tokenString := initTest.Login(initTest.PayloadLogin)
+
+		payload := inputs.SurveyCreatingInput{
 			Title:       "Test Survey",
 			Description: "A test survey",
 		}
-		jsonValue, _ := json.Marshal(input)
 
-		req, _ := http.NewRequest(http.MethodPost, "/surveys", bytes.NewBuffer(jsonValue))
-		req.Header.Set("Content-Type", "application/json")
+		headers := map[string]interface{}{
+			"Authorization": tokenString,
+		}
+		w, _ := initTest.CallApi("/surveys", payload, headers, handler.CreateSurvey, true)
+		initTest.DeleteDataLogin()
 
-		w := httptest.NewRecorder()
-
-		router.POST("/surveys", handler.CreateSurvey)
-		router.ServeHTTP(w, req)
-
+		response := initTest.GetValue(w)
 		assert.Equal(t, http.StatusCreated, w.Code)
+		data := response["data"].(map[string]interface{})
 
-		var response map[string]interface{}
-		err := json.Unmarshal(w.Body.Bytes(), &response)
-		assert.NoError(t, err)
-
-		assert.Equal(t, "Test Survey", response["title"])
-		assert.Equal(t, "A test survey", response["description"])
+		assert.Equal(t, "Test Survey", data["title"])
+		assert.Equal(t, "A test survey", data["description"])
 	})
 }
