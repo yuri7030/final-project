@@ -9,7 +9,7 @@ import (
 	"github.com/yuri7030/final-project/internal/api/database"
 	"github.com/yuri7030/final-project/internal/api/entities"
 	"github.com/yuri7030/final-project/internal/api/inputs"
-	"github.com/yuri7030/final-project/internal/constants"
+	"github.com/yuri7030/final-project/internal/constants/answer_type_enums"
 )
 
 type QuestionHandler struct {
@@ -167,7 +167,7 @@ func (h *QuestionHandler) ListQuestionsBySurvey(c *gin.Context) {
 		result := map[string]interface{}{
 			"id":           question.ID,
 			"questionText": question.QuestionText,
-			"answerType":   constants.AnswerTypes[question.AnswerType],
+			"answerType":   answer_type_enums.AnswerTypes[question.AnswerType],
 		}
 		results = append(results, result)
 	}

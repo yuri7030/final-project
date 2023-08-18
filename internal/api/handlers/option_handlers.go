@@ -9,7 +9,7 @@ import (
 	"github.com/yuri7030/final-project/internal/api/database"
 	"github.com/yuri7030/final-project/internal/api/entities"
 	"github.com/yuri7030/final-project/internal/api/inputs"	
-	"github.com/yuri7030/final-project/internal/constants"
+	"github.com/yuri7030/final-project/internal/constants/answer_type_enums"
 
 )
 
@@ -40,8 +40,8 @@ func (h *QuestionHandler) AddOptionsToQuestion(c *gin.Context) {
 		return
 	}
 
-	if question.AnswerType != constants.RadioAnswer && 
-		question.AnswerType != constants.CheckboxAnswer {
+	if question.AnswerType != answer_type_enums.RadioAnswer && 
+		question.AnswerType != answer_type_enums.CheckboxAnswer {
 		common.ResponseError(c, http.StatusBadRequest, "Cannot add options for this question type", nil)
 		return
 	}

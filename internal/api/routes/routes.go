@@ -25,6 +25,9 @@ func InitializeRoutes(router *gin.Engine) {
 
 	backOfficeGroup.POST("/logout", authHandler.Logout)
 	backOfficeGroup.POST("/change-password", authHandler.ChangePassword)
+	backOfficeGroup.GET("/me", authHandler.GetProfile)
+	backOfficeGroup.PUT("/me", authHandler.UpdateProfile)
+	backOfficeGroup.POST("/validate-token", authHandler.ValidateToken)
 
 	surveyGroup := backOfficeGroup.Group("/surveys")
 	{

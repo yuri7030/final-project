@@ -1,4 +1,4 @@
-package constants
+package answer_type_enums
 
 const (
 	TextAnswer int = 1
