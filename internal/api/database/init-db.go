@@ -9,18 +9,6 @@ import (
 var DB *gorm.DB
 
 func ConnectDatabase(connString string) {
-	// var dbName = config.GetValue("DB_NAME")
-	// var dbHost = config.GetValue("DB_HOST")
-	// var dbUser = config.GetValue("DB_USER")
-	// var dBPassword = config.GetValue("DB_PASSWORD")
-	// var dbPort = config.GetValue("DB_PORT")
-
-	// dbPath := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", dbUser, dBPassword, dbHost, dbPort, dbName)
-
-	// database, err := gorm.Open(postgres.Open(dbPath), &gorm.Config{
-	// 	Logger: logger.Default.LogMode(logger.Silent),
-	// })
-
 	database, err := gorm.Open(postgres.New(postgres.Config{
 		DSN: connString,
 		PreferSimpleProtocol: true,

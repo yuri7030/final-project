@@ -13,7 +13,6 @@ type Question struct {
 	Options []Option `gorm:"foreignKey:QuestionID"`
 }
 
-// TableName sets the table name for the Question model.
 func (Question) TableName() string {
 	return "questions"
 }
