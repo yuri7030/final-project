@@ -1,6 +1,8 @@
 package routes
 
 import (
+	"net/http"
+	
 	"github.com/gin-gonic/gin"
 	"github.com/yuri7030/final-project/internal/api/handlers"
 	"github.com/yuri7030/final-project/internal/api/middlewares"
@@ -8,6 +10,13 @@ import (
 
 func InitializeRoutes(router *gin.Engine) {
 	router.Use(gin.Recovery())
+
+
+	router.GET("/health", func(c *gin.Context) {
+        c.JSON(http.StatusOK, gin.H{
+            "message": "ok",
+        })
+    })
 
 	authHandler := handlers.NewAuthHandler()
 	authGroup := router.Group("/auth")

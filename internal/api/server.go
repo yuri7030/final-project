@@ -2,6 +2,7 @@ package api
 
 import (
 	"log"
+	"os"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -19,14 +20,16 @@ func NewServer() *Server {
 		router: gin.Default(),
 	}
 
-	err := godotenv.Load(".env")
-	if err != nil {
-		log.Fatalf("Some error occured. Err: %s", err)
-		panic(err)
+	if os.Getenv("APP_ENV") != "production" {
+		err := godotenv.Load(".env")
+		
+		if err != nil {
+			log.Fatalf("Some error occured. Err: %s", err)
+			panic(err)
+		}
 	}
 
-	database.ConnectDatabase()
-
+	database.ConnectDatabase(os.Getenv("DATABASE_URL"))
 	
 	config := cors.DefaultConfig()
 	config.AllowOrigins = []string{
