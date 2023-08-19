@@ -1,9 +1,4 @@
-# fly.toml app configuration file generated for survey-form on 2023-08-19T13:23:19+07:00
-#
-# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
-#
-
-app = "survey-form"
+app = "surveyform"
 primary_region = "sin"
 
 [build]
@@ -12,14 +7,14 @@ primary_region = "sin"
 
 [env]
   PORT = "8080"
-  APP_ENV = "DEV"
+  APP_ENV = "production"
+  DB_CONNECTION = "mysql"
+  MYSQL_ATTR_SSL_CA = "/etc/ssl/certs/ca-certificates.crt"
   DB_HOST = "127.0.0.1"
-  DB_USER = "root"
+  DB_PORT = "3306"
+  DB_USERNAME = "root"
   DB_PASSWORD = "root"
   DB_NAME = "google_form_db"
-  DB_PORT = "3306"
-  JWT_KEY = "QhNYaTIWvlvT0lSZxCEOSbCyd9pJMFz2Wtypgriv59U"
-  JWT_EXPIRY_TIME_SECOND = "3600"
 
 [http_service]
   internal_port = 8080
@@ -30,5 +25,5 @@ primary_region = "sin"
   processes = ["app"]
 
 [mounts]
-  source="new_volume"
-  destination="/path/in/app"
+  source = "new_volume"
+  destination = "/path/in/app"
