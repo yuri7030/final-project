@@ -64,12 +64,19 @@ To get started with the Google Form Clone Project, follow these steps:
 
 ## How to run
 
+### develop
+1. Copy file .env from .env.example
+2. Setup database
+    `docker-compose -f docker-compose.dev.yml up -d`
+3. Run code in local
+    `go run main.go`
+
 ### Testing
 1. Test all
-`go test ./test -v`
+    `go test ./test -v`
 
 2. Test single file
-`go test ./test/init_test.go ./test/survey_handlers_test.go -v`
+    `go test ./test/init_test.go ./test/survey_handlers_test.go -v`
 ## Contribution
 
 If you find any issues or have suggestions for improvement, we welcome your contributions. Please follow the guidelines outlined in the [Contributing](CONTRIBUTING.md) file.

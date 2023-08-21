@@ -22,7 +22,7 @@ func NewServer() *Server {
 
 	if os.Getenv("APP_ENV") != "production" {
 		err := godotenv.Load(".env")
-		
+
 		if err != nil {
 			log.Fatalf("Some error occured. Err: %s", err)
 			panic(err)
@@ -30,7 +30,7 @@ func NewServer() *Server {
 	}
 
 	database.ConnectDatabase(os.Getenv("DATABASE_URL"))
-	
+
 	config := cors.DefaultConfig()
 	config.AllowOrigins = []string{
 		"http://localhost:3000",
